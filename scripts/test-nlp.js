@@ -56,10 +56,20 @@ assert(cartQuery2.intent === 'QUERY_CART', 'Intent is QUERY_CART for "total kitn
 const recQuery = parseVoiceCommand("what is in season");
 assert(recQuery.intent === 'QUERY_RECOMMENDATIONS', 'Intent is QUERY_RECOMMENDATIONS for "what is in season"');
 
-// 3. NLP Tests - Remove commands
+// 3. NLP Tests - Hinglish & English Remove Commands
 console.log('\n--- 3. NLP Remove Command Tests ---');
+const remFish1 = parseVoiceCommand('fish hatao cart se');
+assert(remFish1.intent === 'REMOVE_ITEM', 'Intent is REMOVE_ITEM for "fish hatao cart se"');
+assert(remFish1.itemName === 'fish', 'Extracted itemName "fish" from "fish hatao cart se"', remFish1.itemName);
+
+const remFish2 = parseVoiceCommand('fish hata do cart se');
+assert(remFish2.intent === 'REMOVE_ITEM' && remFish2.itemName === 'fish', 'Extracted itemName "fish" from "fish hata do cart se"');
+
+const remFish3 = parseVoiceCommand('cart se fish hatao');
+assert(remFish3.intent === 'REMOVE_ITEM' && remFish3.itemName === 'fish', 'Extracted itemName "fish" from "cart se fish hatao"');
+
 const rem1 = parseVoiceCommand('Remove milk from my list');
-assert(rem1.intent === 'REMOVE_ITEM' && rem1.itemName === 'milk', 'Remove milk recognized');
+assert(rem1.intent === 'REMOVE_ITEM' && rem1.itemName === 'milk', 'Remove milk from my list recognized');
 
 const rem2 = parseVoiceCommand('bread hata do');
 assert(rem2.intent === 'REMOVE_ITEM' && rem2.itemName === 'bread', 'Hinglish "bread hata do" recognized');
@@ -72,7 +82,7 @@ assert(search1.intent === 'SEARCH_ITEMS' && search1.maxPrice === 60, 'Find tooth
 const search2 = parseVoiceCommand('Find Fortune oil between 100 and 200 rs');
 assert(search2.minPrice === 100 && search2.maxPrice === 200, 'Between 100 and 200 rs parsed');
 
-// 5. Store Catalog Best Match Tests
+// 5. Store Catalog Match Tests
 console.log('\n--- 5. Store Catalog Match Tests ---');
 const breadMatch = findBestCatalogMatch('bread');
 assert(breadMatch.found === true && breadMatch.product.name.includes('Bread'), 'Found in-stock Bread in store catalog');

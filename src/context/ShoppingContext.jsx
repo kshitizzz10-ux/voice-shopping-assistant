@@ -128,7 +128,20 @@ export function ShoppingProvider({ children }) {
     let found = false;
 
     setStoredItems((prev) => {
-      const matchIndex = prev.findIndex((i) => i.name.toLowerCase().includes(clean) || clean.includes(i.name.toLowerCase()));
+      // 1. Direct name match or substring match
+      let matchIndex = prev.findIndex((i) =>
+        i.name.toLowerCase().includes(clean) || clean.includes(i.name.toLowerCase())
+      );
+
+      // 2. Word-level match (e.g. user said "fish", item is "Fresh Rohu Fish Cut (500g)")
+      if (matchIndex === -1) {
+        const cleanWords = clean.split(/\s+/);
+        matchIndex = prev.findIndex((i) => {
+          const itemWords = i.name.toLowerCase().split(/\s+/);
+          return cleanWords.some((w) => w.length > 2 && itemWords.some((iw) => iw.includes(w) || w.includes(iw)));
+        });
+      }
+
       if (matchIndex > -1) {
         found = true;
         const item = prev[matchIndex];
@@ -163,17 +176,23 @@ export function ShoppingProvider({ children }) {
     let found = false;
 
     setStoredItems((prev) => {
-      const matchIndex = prev.findIndex((i) => i.name.toLowerCase().includes(clean) || clean.includes(i.name.toLowerCase()));
+      let matchIndex = prev.findIndex((i) =>
+        i.name.toLowerCase().includes(clean) || clean.includes(i.name.toLowerCase())
+      );
+
+      if (matchIndex === -1) {
+        const cleanWords = clean.split(/\s+/);
+        matchIndex = prev.findIndex((i) => {
+          const itemWords = i.name.toLowerCase().split(/\s+/);
+          return cleanWords.some((w) => w.length > 2 && itemWords.some((iw) => iw.includes(w) || w.includes(iw)));
+        });
+      }
+
       if (matchIndex > -1) {
         found = true;
-        const item = prev[matchIndex];
         const updated = [...prev];
-        if (newQty <= 0) {
-          addToast(`Removed "${item.name}"`, 'info');
-          return prev.filter((_, idx) => idx !== matchIndex);
-        }
-        updated[matchIndex] = { ...item, quantity: newQty };
-        addToast(`Updated "${item.name}" to ${newQty}`, 'success');
+        updated[matchIndex] = { ...updated[matchIndex], quantity: Math.max(1, newQty) };
+        addToast(`Updated "${updated[matchIndex].name}" to ${newQty}`, 'info');
         return updated;
       }
       return prev;
