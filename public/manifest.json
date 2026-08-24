@@ -1,0 +1,16 @@
+{
+  "name": "VoiceCart Shopping Assistant",
+  "short_name": "VoiceCart",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "description": "Smart Voice Command Shopping Assistant with intelligent suggestions",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
