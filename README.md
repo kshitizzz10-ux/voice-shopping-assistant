@@ -6,7 +6,7 @@
 
 ## 🌟 Live Demo & Preview
 - **Live Application**: [https://voice-shopping-assistant.vercel.app](https://voice-shopping-assistant.vercel.app)
-- **Repository**: [https://github.com/kshitizgoyal10/voice-command-shopping-assistant](https://github.com/kshitizgoyal10/voice-command-shopping-assistant)
+- **Repository**: [https://github.com/kshitizzz10-ux/voice-shopping-assistant](https://github.com/kshitizzz10-ux/voice-shopping-assistant)
 
 ---
 
@@ -98,8 +98,8 @@ The user interface is built with React 18 and Tailwind CSS, featuring an animate
 ### Installation
 ```bash
 # Clone the repository
-git clone https://github.com/kshitizgoyal10/voice-command-shopping-assistant.git
-cd voice-command-shopping-assistant
+git clone https://github.com/kshitizzz10-ux/voice-shopping-assistant.git
+cd voice-shopping-assistant
 
 # Install dependencies
 npm install
