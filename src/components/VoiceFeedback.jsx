@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mic, Volume2, Sparkles, AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Mic, Volume2, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export function VoiceFeedback({
   isListening,
@@ -8,113 +8,99 @@ export function VoiceFeedback({
   feedbackMessage,
   error,
   isSpeaking,
-  onClear,
 }) {
   if (!isListening && !interimTranscript && !feedbackMessage && !error && !isSpeaking) {
     return null;
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 mb-6 transition-all duration-300">
+    <div className="w-full max-w-3xl mx-auto px-4 mb-5 transition-all duration-300">
       <div
-        className={`glass-hud rounded-3xl p-4 sm:p-5 transition-all duration-300 relative overflow-hidden ${
+        className={`rounded-3xl p-4 sm:p-5 transition-all duration-300 border shadow-md relative overflow-hidden ${
           error
-            ? 'border-rose-500/50 shadow-rose-950/40 bg-rose-950/40'
+            ? 'border-rose-300 bg-rose-50 text-rose-900 shadow-rose-100'
             : isListening
-            ? 'border-emerald-400/80 ring-2 ring-emerald-500/30 bg-slate-900/90 shadow-emerald-950/60'
+            ? 'border-emerald-400 ring-2 ring-emerald-400/20 bg-emerald-50/90 text-emerald-950 shadow-emerald-100'
             : isSpeaking
-            ? 'border-sky-400/70 bg-slate-900/90 shadow-sky-950/40'
-            : 'border-emerald-500/40 bg-slate-900/80 shadow-slate-950/40'
+            ? 'border-sky-300 bg-sky-50 text-sky-950 shadow-sky-100'
+            : 'border-slate-200 bg-white text-slate-900 shadow-slate-100'
         }`}
       >
-        {/* Glowing Gradient Accent Line */}
-        <div
-          className={`absolute top-0 inset-x-0 h-1 bg-gradient-to-r ${
-            error
-              ? 'from-rose-500 via-red-400 to-rose-600'
-              : isListening
-              ? 'from-emerald-400 via-teal-300 to-emerald-500 animate-pulse'
-              : isSpeaking
-              ? 'from-sky-400 via-cyan-300 to-sky-500'
-              : 'from-emerald-500 via-teal-400 to-emerald-600'
-          }`}
-        ></div>
-
-        <div className="flex items-center justify-between gap-3 pb-2 border-b border-slate-800/80">
+        <div className="flex items-center justify-between gap-3 pb-2 border-b border-slate-200/70">
           <div className="flex items-center gap-2.5">
             {isListening ? (
-              <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-xs font-bold uppercase tracking-wider">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>Live Audio Stream</span>
+              <div className="flex items-center gap-2 px-3 py-1 bg-emerald-600 text-white rounded-full text-xs font-bold uppercase tracking-wider shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                <span>Listening Live</span>
               </div>
             ) : isSpeaking ? (
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-sky-500/20 border border-sky-400/40 text-sky-300 rounded-full text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-sky-600 text-white rounded-full text-xs font-bold uppercase tracking-wider shadow-xs">
                 <Volume2 className="w-3.5 h-3.5 animate-bounce" />
                 <span>Voice Response</span>
               </div>
             ) : error ? (
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-rose-500/20 border border-rose-400/40 text-rose-300 rounded-full text-xs font-bold">
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-rose-600 text-white rounded-full text-xs font-bold">
                 <AlertCircle className="w-3.5 h-3.5" />
-                <span>Audio Alert</span>
+                <span>Notice</span>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-xs font-bold">
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-600 text-white rounded-full text-xs font-bold">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Action Complete</span>
+                <span>Confirmed</span>
               </div>
             )}
 
             {/* Audio Waveform Bars */}
             {isListening && (
               <div className="flex items-center gap-1 h-6 px-2">
-                <span className="w-1 bg-emerald-400 rounded-full eq-bar-1"></span>
-                <span className="w-1 bg-emerald-300 rounded-full eq-bar-2"></span>
-                <span className="w-1 bg-teal-400 rounded-full eq-bar-3"></span>
-                <span className="w-1 bg-emerald-400 rounded-full eq-bar-4"></span>
-                <span className="w-1 bg-emerald-300 rounded-full eq-bar-5"></span>
+                <span className="w-1 bg-emerald-600 rounded-full eq-bar-1"></span>
+                <span className="w-1 bg-emerald-500 rounded-full eq-bar-2"></span>
+                <span className="w-1 bg-teal-600 rounded-full eq-bar-3"></span>
+                <span className="w-1 bg-emerald-600 rounded-full eq-bar-4"></span>
+                <span className="w-1 bg-emerald-500 rounded-full eq-bar-5"></span>
               </div>
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>NLP Voice Engine</span>
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+            <span>AI Voice NLP</span>
           </div>
         </div>
 
         {/* Live Audio Transcript Display */}
-        <div className="mt-3">
+        <div className="mt-2.5">
           {error ? (
-            <p className="text-sm font-medium text-rose-300">{error}</p>
+            <p className="text-sm font-semibold text-rose-800">{error}</p>
           ) : isListening ? (
             <div className="flex items-start gap-2">
-              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-800/60 shrink-0">
+              <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200 shrink-0">
                 HEARD
               </span>
-              <p className="text-base sm:text-lg font-medium text-emerald-100 font-sans tracking-wide min-h-[28px]">
+              <p className="text-base sm:text-lg font-medium text-emerald-950 tracking-wide min-h-[28px]">
                 {interimTranscript ? (
                   <>
                     <span>"{interimTranscript}"</span>
-                    <span className="inline-block w-1.5 h-4 ml-1 bg-emerald-400 animate-pulse"></span>
+                    <span className="inline-block w-1.5 h-4 ml-1 bg-emerald-600 animate-pulse"></span>
                   </>
                 ) : (
                   <span className="text-slate-400 italic text-sm">
-                    Listening to your voice... (e.g., "Add 2 packets Amul milk" or "दो किलो सेब जोड़ो")
+                    Listening to your voice... (e.g., "Bread add karo", "Add 2 packets milk", or "दो किलो सेब जोड़ो")
                   </span>
                 )}
               </p>
             </div>
           ) : feedbackMessage ? (
-            <div className="flex items-center gap-2 text-sm sm:text-base font-semibold text-emerald-300">
-              <span className="text-emerald-400">✓</span>
+            <div className="flex items-center gap-2 text-sm sm:text-base font-semibold text-slate-900">
+              <span className="text-emerald-600 font-bold">✓</span>
               <span>{feedbackMessage}</span>
             </div>
           ) : finalTranscript ? (
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded">
+              <span className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
                 PROCESSED
               </span>
-              <p className="text-sm text-slate-200">"{finalTranscript}"</p>
+              <p className="text-sm text-slate-700 font-medium">"{finalTranscript}"</p>
             </div>
           ) : null}
         </div>

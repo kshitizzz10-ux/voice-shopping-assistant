@@ -22,32 +22,32 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
   };
 
   return (
-    <div className="glass-panel rounded-3xl border border-slate-800 shadow-xl p-4 sm:p-5 flex flex-col h-full">
+    <div className="grocery-panel rounded-3xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col h-full bg-white">
       {/* Panel Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100">
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 rounded-xl">
+          <div className="p-2 bg-emerald-100 text-emerald-800 rounded-xl">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="font-bold text-slate-100 text-base">Smart Suggestions</h2>
-            <p className="text-xs text-slate-400">AI-powered recommendations</p>
+            <h2 className="font-extrabold text-slate-900 text-base">Smart Suggestions</h2>
+            <p className="text-xs text-slate-500">AI-powered recommendations</p>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-900/90 rounded-2xl my-3 text-xs font-semibold border border-slate-800">
+      <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 rounded-2xl my-3 text-xs font-bold">
         <button
           type="button"
           onClick={() => handleTabChange('history')}
           className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl transition-all ${
             tab === 'history'
-              ? 'bg-emerald-600 text-white shadow-md'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-white text-emerald-800 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <History className="w-3.5 h-3.5" />
+          <History className="w-3.5 h-3.5 text-emerald-600" />
           <span className="hidden sm:inline">Frequent</span>
           <span className="sm:hidden">Restock</span>
         </button>
@@ -57,11 +57,11 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
           onClick={() => handleTabChange('seasonal')}
           className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl transition-all ${
             tab === 'seasonal'
-              ? 'bg-emerald-600 text-white shadow-md'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-white text-amber-800 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Sun className="w-3.5 h-3.5" />
+          <Sun className="w-3.5 h-3.5 text-amber-600" />
           <span>Seasonal</span>
         </button>
 
@@ -70,11 +70,11 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
           onClick={() => handleTabChange('substitutes')}
           className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl transition-all ${
             tab === 'substitutes'
-              ? 'bg-emerald-600 text-white shadow-md'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-white text-sky-800 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          <Repeat className="w-3.5 h-3.5" />
+          <Repeat className="w-3.5 h-3.5 text-sky-600" />
           <span>Swaps</span>
         </button>
       </div>
@@ -84,7 +84,7 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
         {tab === 'history' && (
           <>
             {suggestions.historySuggestions.length === 0 ? (
-              <div className="text-center py-10 text-slate-500 text-sm">
+              <div className="text-center py-10 text-slate-400 text-sm">
                 No frequent items left to add. Your cart is all set!
               </div>
             ) : (
@@ -93,13 +93,13 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
                 return (
                   <div
                     key={item.name}
-                    className="flex items-center justify-between p-3 rounded-2xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-800/70 hover:border-emerald-500/40 transition-all group"
+                    className="flex items-center justify-between p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-white hover:border-emerald-300 transition-all group"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <span className="text-lg">{item.icon || '🛍️'}</span>
                       <div className="min-w-0">
-                        <h4 className="font-semibold text-slate-100 text-sm truncate">{item.name}</h4>
-                        <p className="text-[11px] text-emerald-400 font-medium">{item.reason}</p>
+                        <h4 className="font-bold text-slate-900 text-sm truncate">{item.name}</h4>
+                        <p className="text-[11px] text-emerald-700 font-semibold">{item.reason}</p>
                       </div>
                     </div>
 
@@ -107,10 +107,10 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
                       type="button"
                       onClick={() => addItem({ name: item.name, category: item.category })}
                       disabled={inList}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition-all ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition-all ${
                         inList
-                          ? 'bg-slate-800 text-slate-500 cursor-default'
-                          : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md active:scale-95'
+                          ? 'bg-slate-200 text-slate-500 cursor-default'
+                          : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs active:scale-95'
                       }`}
                     >
                       {inList ? (
@@ -135,7 +135,7 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
         {tab === 'seasonal' && (
           <>
             {suggestions.seasonalSuggestions.length === 0 ? (
-              <div className="text-center py-10 text-slate-500 text-sm">
+              <div className="text-center py-10 text-slate-400 text-sm">
                 All seasonal deals are already in your list!
               </div>
             ) : (
@@ -144,20 +144,20 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
                 return (
                   <div
                     key={item.name}
-                    className="flex items-center justify-between p-3 rounded-2xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-800/70 hover:border-amber-500/40 transition-all group"
+                    className="flex items-center justify-between p-3 rounded-2xl border border-slate-200 bg-amber-50/50 hover:bg-white hover:border-amber-400 transition-all group"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <span className="text-lg">{item.icon || '☀️'}</span>
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <h4 className="font-semibold text-slate-100 text-sm truncate">{item.name}</h4>
+                          <h4 className="font-bold text-slate-900 text-sm truncate">{item.name}</h4>
                           {item.discount && (
-                            <span className="text-[10px] font-bold text-amber-300 bg-amber-950/80 border border-amber-500/30 px-1.5 py-0.2 rounded">
+                            <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded">
                               {item.discount}
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-slate-400">{item.reason}</p>
+                        <p className="text-[11px] text-slate-500">{item.reason}</p>
                       </div>
                     </div>
 
@@ -165,10 +165,10 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
                       type="button"
                       onClick={() => addItem({ name: item.name, category: item.category })}
                       disabled={inList}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition-all ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition-all ${
                         inList
-                          ? 'bg-slate-800 text-slate-500 cursor-default'
-                          : 'bg-amber-600 hover:bg-amber-500 text-white shadow-md active:scale-95'
+                          ? 'bg-slate-200 text-slate-500 cursor-default'
+                          : 'bg-amber-600 hover:bg-amber-700 text-white shadow-xs active:scale-95'
                       }`}
                     >
                       {inList ? (
@@ -193,7 +193,7 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
         {tab === 'substitutes' && (
           <>
             {suggestions.substituteSuggestions.length === 0 ? (
-              <div className="text-center py-10 text-slate-500 text-sm">
+              <div className="text-center py-10 text-slate-400 text-sm">
                 Add staples like milk, paneer, atta, or sugar to view healthy & dietary alternative swaps!
               </div>
             ) : (
@@ -202,14 +202,14 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
                 return (
                   <div
                     key={item.name}
-                    className="flex items-center justify-between p-3 rounded-2xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-800/70 hover:border-sky-500/40 transition-all group"
+                    className="flex items-center justify-between p-3 rounded-2xl border border-slate-200 bg-sky-50/50 hover:bg-white hover:border-sky-400 transition-all group"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <span className="text-lg">{item.icon || '🌱'}</span>
                       <div className="min-w-0">
-                        <h4 className="font-semibold text-slate-100 text-sm truncate">{item.name}</h4>
-                        <p className="text-[11px] text-sky-400 font-medium">
-                          Swap for <span className="font-bold text-white">{item.originalItem}</span> • {item.reason}
+                        <h4 className="font-bold text-slate-900 text-sm truncate">{item.name}</h4>
+                        <p className="text-[11px] text-sky-700 font-semibold">
+                          Swap for <span className="font-bold text-slate-900">{item.originalItem}</span> • {item.reason}
                         </p>
                       </div>
                     </div>
@@ -218,10 +218,10 @@ export function SuggestionPanel({ activeTab = 'history', onTabChange }) {
                       type="button"
                       onClick={() => addItem({ name: item.name, category: item.category })}
                       disabled={inList}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition-all ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition-all ${
                         inList
-                          ? 'bg-slate-800 text-slate-500 cursor-default'
-                          : 'bg-sky-600 hover:bg-sky-500 text-white shadow-md active:scale-95'
+                          ? 'bg-slate-200 text-slate-500 cursor-default'
+                          : 'bg-sky-600 hover:bg-sky-700 text-white shadow-xs active:scale-95'
                       }`}
                     >
                       {inList ? (

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { ShoppingProvider, useShopping } from './context/ShoppingContext.jsx';
 import { Header } from './components/Header.jsx';
+import { StoreAisles } from './components/StoreAisles.jsx';
 import { ShoppingList } from './components/ShoppingList.jsx';
 import { SuggestionPanel } from './components/SuggestionPanel.jsx';
 import { SearchModal } from './components/SearchBar.jsx';
@@ -10,7 +11,7 @@ import { VoiceFeedback } from './components/VoiceFeedback.jsx';
 import { ToastContainer } from './components/Toast.jsx';
 import { useSpeechRecognition } from './hooks/useSpeechRecognition.js';
 import { processVoiceCommand } from './utils/commandProcessor.js';
-import { Sparkles, ShoppingBag } from 'lucide-react';
+import { Sparkles, ShoppingBag, Store } from 'lucide-react';
 
 function VoiceCartApp() {
   const {
@@ -31,9 +32,10 @@ function VoiceCartApp() {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [suggestionTab, setSuggestionTab] = useState('history');
   const [feedbackMessage, setFeedbackMessage] = useState('');
-  const [mobileView, setMobileView] = useState('list'); // 'list' or 'suggestions'
+  const [unavailableQuery, setUnavailableQuery] = useState(null);
+  const [mobileView, setMobileView] = useState('list'); // 'aisles', 'list', or 'suggestions'
 
-  // Voice Command Dispatcher
+  // Voice Command Dispatcher with Smart LLM-style Semantic Context
   const handleCommandDetected = useCallback(
     (finalTranscript) => {
       if (!finalTranscript) return;
@@ -45,20 +47,28 @@ function VoiceCartApp() {
         clearList,
         clearChecked,
         triggerSearch,
+        setUnavailableQuery,
       };
 
-      const result = processVoiceCommand(finalTranscript, language, shoppingActions);
+      const result = processVoiceCommand(finalTranscript, language, shoppingActions, items);
       setFeedbackMessage(result.feedback);
 
-      // Speak audio feedback if enabled
+      // If user asked for an unavailable item, set alert
+      if (result.intent === 'UNAVAILABLE_ITEM' && result.data?.unavailableItems) {
+        setUnavailableQuery(result.data.unavailableItems.join(', '));
+      } else if (result.success) {
+        setUnavailableQuery(null);
+      }
+
+      // Speak audio feedback
       speak(result.feedback, language);
 
-      // Auto clear feedback message after 4.5s
+      // Auto clear feedback message after 5s
       setTimeout(() => {
         setFeedbackMessage('');
-      }, 4500);
+      }, 5000);
     },
-    [addItem, removeItemByName, updateItemQuantityByName, clearList, clearChecked, triggerSearch, language, speak]
+    [addItem, removeItemByName, updateItemQuantityByName, clearList, clearChecked, triggerSearch, language, speak, items]
   );
 
   const {
@@ -84,11 +94,7 @@ function VoiceCartApp() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100 pb-36 relative overflow-x-hidden">
-      {/* Ambient background glows */}
-      <div className="fixed top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="fixed bottom-1/3 right-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 pb-36 relative font-sans">
       {/* App Header */}
       <Header
         onOpenSearch={() => triggerSearch({ query: '' })}
@@ -107,27 +113,33 @@ function VoiceCartApp() {
           isSpeaking={isSpeaking}
         />
 
+        {/* Available Store Products Aisles */}
+        <StoreAisles
+          unavailableQuery={unavailableQuery}
+          onClearUnavailable={() => setUnavailableQuery(null)}
+        />
+
         {/* Mobile Tab Switcher */}
-        <div className="flex sm:hidden p-1 bg-slate-900/90 rounded-2xl mb-4 font-semibold text-xs border border-slate-800">
+        <div className="flex sm:hidden p-1 bg-white rounded-2xl mb-4 font-bold text-xs border border-slate-200 shadow-xs">
           <button
             type="button"
             onClick={() => setMobileView('list')}
             className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-              mobileView === 'list' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400'
+              mobileView === 'list' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600'
             }`}
           >
             <ShoppingBag className="w-3.5 h-3.5" />
-            <span>Shopping List ({items.length})</span>
+            <span>My List ({items.length})</span>
           </button>
           <button
             type="button"
             onClick={() => setMobileView('suggestions')}
             className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-              mobileView === 'suggestions' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400'
+              mobileView === 'suggestions' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Smart Suggestions</span>
+            <span>Suggestions</span>
           </button>
         </div>
 
@@ -139,6 +151,7 @@ function VoiceCartApp() {
               onSelectSubstitute={handleSelectSubstitute}
               onOpenSearch={() => triggerSearch({ query: '' })}
               onOpenHelp={() => setIsHelpOpen(true)}
+              onVoiceCommand={handleTryVoiceCommand}
             />
           </div>
 
@@ -152,9 +165,9 @@ function VoiceCartApp() {
         </div>
       </main>
 
-      {/* Floating Holographic Voice Control Bar */}
-      <div className="fixed bottom-4 inset-x-0 z-40 p-4 pointer-events-none flex flex-col items-center justify-center">
-        <div className="pointer-events-auto glass-hud px-8 py-3 rounded-full shadow-2xl flex items-center gap-6 border border-emerald-500/40">
+      {/* Floating Microphone Orb Bar */}
+      <div className="fixed bottom-5 inset-x-0 z-40 p-4 pointer-events-none flex flex-col items-center justify-center">
+        <div className="pointer-events-auto bg-white/95 backdrop-blur-md px-8 py-3 rounded-full shadow-2xl flex items-center gap-6 border-2 border-emerald-500/80">
           <VoiceButton
             isListening={isListening}
             onClick={toggleListening}
