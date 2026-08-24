@@ -3,7 +3,7 @@ import { useShopping } from '../context/ShoppingContext.jsx';
 import { searchProducts } from '../utils/productDatabase.js';
 import { CATEGORIES, CURRENCY } from '../utils/constants.js';
 import { PriceFilter } from './PriceFilter.jsx';
-import { Search, X, Mic, Plus, Check, Sparkles } from 'lucide-react';
+import { Search, X, Mic, Plus, Check } from 'lucide-react';
 
 export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
   const { searchState, setSearchState, addItem, items, currency = CURRENCY } = useShopping();
@@ -28,21 +28,21 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-scale-up">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md animate-fade-in">
+      <div className="glass-panel rounded-3xl shadow-2xl border border-slate-700/80 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-scale-up">
         {/* Header & Search Bar */}
-        <div className="p-4 sm:p-6 border-b border-slate-100 space-y-4">
+        <div className="p-4 sm:p-6 border-b border-slate-800 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-xl">
+              <div className="p-2 bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 rounded-xl">
                 <Search className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-bold text-slate-900">Voice-Activated Product Search</h2>
+              <h2 className="text-lg font-bold text-white">Voice-Activated Catalog Search</h2>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -50,20 +50,20 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
 
           {/* Search Input with Mic button */}
           <div className="relative flex items-center">
-            <Search className="absolute left-4 w-5 h-5 text-slate-400 pointer-events-none" />
+            <Search className="absolute left-4 w-5 h-5 text-slate-500 pointer-events-none" />
             <input
               type="text"
               value={searchState.query || ''}
               onChange={(e) => setSearchState({ query: e.target.value })}
               placeholder='Search Indian groceries, brands (e.g. "Amul", "Aashirvaad", "Dettol")...'
-              className="w-full pl-11 pr-24 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+              className="w-full pl-11 pr-24 py-3.5 bg-slate-900 border border-slate-700 rounded-2xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:bg-slate-900 transition-all"
               autoFocus
             />
             {searchState.query && (
               <button
                 type="button"
                 onClick={() => setSearchState({ query: '' })}
-                className="absolute right-12 p-1.5 text-slate-400 hover:text-slate-600"
+                className="absolute right-12 p-1.5 text-slate-400 hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -71,7 +71,7 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
             <button
               type="button"
               onClick={onVoiceSearchClick}
-              className="absolute right-2 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1 shadow-xs transition-all active:scale-95"
+              className="absolute right-2 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1 shadow-md transition-all active:scale-95"
               title="Voice Search"
             >
               <Mic className="w-3.5 h-3.5" />
@@ -88,8 +88,8 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
                 onClick={() => setActiveCategory(cat)}
                 className={`text-xs px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition-all ${
                   activeCategory === cat
-                    ? 'bg-slate-900 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    ? 'bg-emerald-600 text-white shadow-sm'
+                    : 'bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800'
                 }`}
               >
                 {cat}
@@ -109,16 +109,16 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
         </div>
 
         {/* Search Results List */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2.5 bg-slate-50/50">
-          <div className="flex items-center justify-between text-xs text-slate-500 font-medium pb-1">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2.5 bg-slate-950/60">
+          <div className="flex items-center justify-between text-xs text-slate-400 font-mono pb-1">
             <span>Showing {results.length} catalog items</span>
             {searchState.maxPrice < 1000 && <span>Max Price: {currency}{searchState.maxPrice}</span>}
           </div>
 
           {results.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-slate-500 text-sm font-medium">No matching products found.</p>
-              <p className="text-slate-400 text-xs mt-1">Try adjusting the price slider or search query.</p>
+              <p className="text-slate-400 text-sm font-medium">No matching products found.</p>
+              <p className="text-slate-500 text-xs mt-1">Try adjusting the price slider or search query.</p>
             </div>
           ) : (
             results.map((product) => {
@@ -126,20 +126,20 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
               return (
                 <div
                   key={product.id}
-                  className="flex items-center justify-between p-3.5 bg-white rounded-2xl border border-slate-200 hover:border-emerald-300 hover:shadow-xs transition-all"
+                  className="flex items-center justify-between p-3.5 bg-slate-900/80 rounded-2xl border border-slate-800 hover:border-emerald-500/40 hover:shadow-md transition-all"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <h4 className="font-semibold text-slate-900 text-sm truncate">{product.name}</h4>
+                        <h4 className="font-semibold text-slate-100 text-sm truncate">{product.name}</h4>
                         {product.organic && (
-                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.2 rounded-full">
+                          <span className="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-500/30 px-1.5 py-0.2 rounded-full">
                             Desi / Organic
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                        <span className="text-slate-600 font-medium">{product.brand}</span>
+                      <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
+                        <span className="text-emerald-400 font-medium">{product.brand}</span>
                         <span>•</span>
                         <span>{product.category}</span>
                       </div>
@@ -147,7 +147,7 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
                   </div>
 
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className="font-bold text-slate-900 text-sm">
+                    <span className="font-bold font-mono text-emerald-300 text-sm">
                       {currency}{product.price.toFixed(0)}
                     </span>
 
@@ -165,8 +165,8 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
                       disabled={inList}
                       className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition-all ${
                         inList
-                          ? 'bg-slate-200 text-slate-500 cursor-default'
-                          : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs active:scale-95'
+                          ? 'bg-slate-800 text-slate-500 cursor-default'
+                          : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md active:scale-95'
                       }`}
                     >
                       {inList ? (

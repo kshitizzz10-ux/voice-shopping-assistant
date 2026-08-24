@@ -1,16 +1,16 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { ShoppingProvider, useShopping } from './context/ShoppingContext';
-import { Header } from './components/Header';
-import { ShoppingList } from './components/ShoppingList';
-import { SuggestionPanel } from './components/SuggestionPanel';
-import { SearchModal } from './components/SearchBar';
-import { VoiceHelpModal } from './components/VoiceHelpModal';
-import { VoiceButton } from './components/VoiceButton';
-import { VoiceFeedback } from './components/VoiceFeedback';
-import { ToastContainer } from './components/Toast';
-import { useSpeechRecognition } from './hooks/useSpeechRecognition';
-import { processVoiceCommand } from './utils/commandProcessor';
-import { Sparkles, Mic, Layers, ShoppingBag } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { ShoppingProvider, useShopping } from './context/ShoppingContext.jsx';
+import { Header } from './components/Header.jsx';
+import { ShoppingList } from './components/ShoppingList.jsx';
+import { SuggestionPanel } from './components/SuggestionPanel.jsx';
+import { SearchModal } from './components/SearchBar.jsx';
+import { VoiceHelpModal } from './components/VoiceHelpModal.jsx';
+import { VoiceButton } from './components/VoiceButton.jsx';
+import { VoiceFeedback } from './components/VoiceFeedback.jsx';
+import { ToastContainer } from './components/Toast.jsx';
+import { useSpeechRecognition } from './hooks/useSpeechRecognition.js';
+import { processVoiceCommand } from './utils/commandProcessor.js';
+import { Sparkles, ShoppingBag } from 'lucide-react';
 
 function VoiceCartApp() {
   const {
@@ -23,7 +23,6 @@ function VoiceCartApp() {
     triggerSearch,
     language,
     speak,
-    stopSpeaking,
     isSpeaking,
     searchState,
     closeSearch,
@@ -54,7 +53,7 @@ function VoiceCartApp() {
       // Speak audio feedback if enabled
       speak(result.feedback, language);
 
-      // Auto clear feedback message after 4s
+      // Auto clear feedback message after 4.5s
       setTimeout(() => {
         setFeedbackMessage('');
       }, 4500);
@@ -75,7 +74,7 @@ function VoiceCartApp() {
     onCommandDetected: handleCommandDetected,
   });
 
-  const handleSelectSubstitute = (itemName) => {
+  const handleSelectSubstitute = () => {
     setSuggestionTab('substitutes');
     setMobileView('suggestions');
   };
@@ -85,16 +84,20 @@ function VoiceCartApp() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-50 via-slate-50 to-emerald-50/20 text-slate-900 pb-32">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100 pb-36 relative overflow-x-hidden">
+      {/* Ambient background glows */}
+      <div className="fixed top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="fixed bottom-1/3 right-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
       {/* App Header */}
       <Header
         onOpenSearch={() => triggerSearch({ query: '' })}
         onOpenHelp={() => setIsHelpOpen(true)}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        {/* Real-time Voice Feedback Banner */}
+      {/* Main App Container */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 relative z-10">
+        {/* Real-time Voice HUD & Visualizer */}
         <VoiceFeedback
           isListening={isListening}
           interimTranscript={interimTranscript}
@@ -105,12 +108,12 @@ function VoiceCartApp() {
         />
 
         {/* Mobile Tab Switcher */}
-        <div className="flex sm:hidden p-1 bg-slate-200/70 rounded-2xl mb-4 font-semibold text-xs">
+        <div className="flex sm:hidden p-1 bg-slate-900/90 rounded-2xl mb-4 font-semibold text-xs border border-slate-800">
           <button
             type="button"
             onClick={() => setMobileView('list')}
             className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-              mobileView === 'list' ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600'
+              mobileView === 'list' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400'
             }`}
           >
             <ShoppingBag className="w-3.5 h-3.5" />
@@ -120,11 +123,11 @@ function VoiceCartApp() {
             type="button"
             onClick={() => setMobileView('suggestions')}
             className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
-              mobileView === 'suggestions' ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600'
+              mobileView === 'suggestions' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Suggestions</span>
+            <span>Smart Suggestions</span>
           </button>
         </div>
 
@@ -149,9 +152,9 @@ function VoiceCartApp() {
         </div>
       </main>
 
-      {/* Floating Bottom Voice Control Bar */}
-      <div className="fixed bottom-0 inset-x-0 z-40 p-4 pointer-events-none flex flex-col items-center justify-center">
-        <div className="pointer-events-auto bg-white/95 backdrop-blur-xl border border-slate-200/80 px-6 py-3 rounded-full shadow-2xl flex items-center gap-6">
+      {/* Floating Holographic Voice Control Bar */}
+      <div className="fixed bottom-4 inset-x-0 z-40 p-4 pointer-events-none flex flex-col items-center justify-center">
+        <div className="pointer-events-auto glass-hud px-8 py-3 rounded-full shadow-2xl flex items-center gap-6 border border-emerald-500/40">
           <VoiceButton
             isListening={isListening}
             onClick={toggleListening}

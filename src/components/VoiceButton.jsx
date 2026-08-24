@@ -1,23 +1,23 @@
 import React from 'react';
-import { Mic, MicOff, Sparkles } from 'lucide-react';
+import { Mic, MicOff } from 'lucide-react';
 
 export function VoiceButton({ isListening, onClick, disabled = false }) {
   const handleClick = () => {
     if (disabled) return;
-    // Haptic feedback on mobile devices
     if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-      navigator.vibrate(isListening ? [30] : [50, 30, 50]);
+      navigator.vibrate(isListening ? [40] : [60, 40, 60]);
     }
     onClick();
   };
 
   return (
     <div className="relative inline-flex items-center justify-center">
-      {/* Outer pulsing ring when listening */}
+      {/* Outer Holographic Glow Rings */}
       {isListening && (
         <>
-          <span className="absolute w-20 h-20 rounded-full bg-emerald-400/40 animate-ping"></span>
-          <span className="absolute w-24 h-24 rounded-full bg-emerald-500/20 animate-pulse-slow"></span>
+          <span className="absolute w-24 h-24 rounded-full bg-emerald-500/30 animate-ping"></span>
+          <span className="absolute w-28 h-28 rounded-full bg-emerald-400/20 animate-orb"></span>
+          <span className="absolute w-32 h-32 rounded-full border border-emerald-400/40 animate-spin"></span>
         </>
       )}
 
@@ -26,33 +26,33 @@ export function VoiceButton({ isListening, onClick, disabled = false }) {
         type="button"
         onClick={handleClick}
         disabled={disabled}
-        className={`relative z-10 w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 transform active:scale-95 focus:outline-none focus:ring-4 focus:ring-emerald-400/40 ${
+        className={`relative z-10 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center transition-all duration-300 transform active:scale-95 focus:outline-none focus:ring-4 focus:ring-emerald-400/50 ${
           isListening
-            ? 'bg-gradient-to-tr from-rose-500 to-red-600 text-white shadow-red-500/30 scale-105 animate-pulse'
+            ? 'bg-gradient-to-tr from-red-600 via-rose-500 to-amber-500 text-white shadow-2xl shadow-red-500/50 scale-110'
             : disabled
-            ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
-            : 'bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-emerald-600/30 hover:scale-105'
+            ? 'bg-slate-800 text-slate-600 cursor-not-allowed'
+            : 'bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 hover:from-emerald-500 hover:to-teal-300 text-white shadow-2xl shadow-emerald-500/40 hover:scale-105'
         }`}
-        title={isListening ? 'Tap to stop listening' : 'Tap to speak voice command'}
-        aria-label={isListening ? 'Stop listening' : 'Start voice command'}
+        title={isListening ? 'Tap to stop microphone' : 'Tap to speak voice command'}
+        aria-label={isListening ? 'Stop microphone' : 'Start voice command'}
       >
         {isListening ? (
-          <MicOff className="w-7 h-7 animate-bounce" />
+          <MicOff className="w-8 h-8 animate-pulse text-white drop-shadow-md" />
         ) : (
-          <Mic className="w-7 h-7" />
+          <Mic className="w-8 h-8 text-white drop-shadow-md" />
         )}
       </button>
 
-      {/* Floating Sparkle / Status Pill */}
-      <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap">
+      {/* Status Pill Indicator */}
+      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
         <span
-          className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs uppercase tracking-wider transition-colors ${
+          className={`text-[11px] font-mono font-bold px-3 py-0.5 rounded-full uppercase tracking-wider transition-all border shadow-lg ${
             isListening
-              ? 'bg-rose-100 text-rose-700 border border-rose-200 animate-pulse'
-              : 'bg-slate-100 text-slate-600 border border-slate-200'
+              ? 'bg-rose-950/90 text-rose-300 border-rose-500/60 animate-pulse'
+              : 'bg-slate-900/90 text-emerald-400 border-slate-700/80'
           }`}
         >
-          {isListening ? 'Listening...' : 'Tap to Speak'}
+          {isListening ? '● Live Recording' : '🎙️ Tap to Speak'}
         </span>
       </div>
     </div>

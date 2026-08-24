@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ShoppingItem } from './ShoppingItem';
-import { CATEGORY_METADATA } from '../utils/constants';
+import { ShoppingItem } from './ShoppingItem.jsx';
+import { CATEGORY_METADATA } from '../utils/constants.js';
 import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
 
 export function CategoryGroup({ category, items, onSelectSubstitute }) {
@@ -11,27 +11,27 @@ export function CategoryGroup({ category, items, onSelectSubstitute }) {
   const totalCount = items.length;
 
   return (
-    <div className="bg-white/80 rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden transition-all">
+    <div className="glass-card rounded-3xl border border-slate-800/80 shadow-md overflow-hidden transition-all">
       {/* Category Header */}
       <button
         type="button"
         onClick={() => setIsCollapsed((prev) => !prev)}
-        className="w-full flex items-center justify-between p-4 bg-slate-50/70 hover:bg-slate-100/70 transition-colors text-left"
+        className="w-full flex items-center justify-between p-4 bg-slate-900/70 hover:bg-slate-800/70 transition-colors text-left"
       >
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${meta.iconBg}`}>
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center font-bold font-mono text-xs bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
             {totalCount}
           </div>
           <div>
-            <h3 className="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+            <h3 className="font-bold text-slate-100 text-sm sm:text-base flex items-center gap-2">
               <span>{category}</span>
               {completedCount === totalCount && totalCount > 0 && (
-                <span className="text-[10px] font-semibold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-mono font-semibold uppercase tracking-wider bg-emerald-950 text-emerald-300 border border-emerald-600/40 px-2 py-0.5 rounded-full">
                   All Done
                 </span>
               )}
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               {completedCount} of {totalCount} completed
             </p>
           </div>
@@ -48,7 +48,7 @@ export function CategoryGroup({ category, items, onSelectSubstitute }) {
 
       {/* Item List */}
       {!isCollapsed && (
-        <div className="p-3 sm:p-4 space-y-2.5 bg-white">
+        <div className="p-3 sm:p-4 space-y-2.5 bg-slate-950/40">
           {items.map((item) => (
             <ShoppingItem
               key={item.id}
