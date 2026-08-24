@@ -22,19 +22,20 @@ export function useSpeechSynthesis() {
     }
   }, []);
 
-  const speak = useCallback((text, langCode = 'en-US') => {
-    if (!enabled || !synthRef.current || !text) return;
+  const speak = useCallback((text, langCode = 'en-IN', onComplete) => {
+    if (!enabled || !synthRef.current || !text) {
+      if (onComplete) onComplete();
+      return;
+    }
 
     try {
-      // Cancel ongoing speech
       synthRef.current.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = langCode;
-      utterance.rate = 1.0;
+      utterance.rate = 1.05;
       utterance.pitch = 1.0;
 
-      // Find matching voice for the target language
       if (voices.length > 0) {
         const matchedVoice = voices.find((v) => v.lang.replace('_', '-').startsWith(langCode.substring(0, 2))) ||
           voices.find((v) => v.lang === langCode);
@@ -44,13 +45,20 @@ export function useSpeechSynthesis() {
       }
 
       utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        if (onComplete) onComplete();
+      };
+      utterance.onerror = () => {
+        setIsSpeaking(false);
+        if (onComplete) onComplete();
+      };
 
       synthRef.current.speak(utterance);
     } catch (err) {
       console.warn('Speech synthesis error:', err);
       setIsSpeaking(false);
+      if (onComplete) onComplete();
     }
   }, [enabled, voices]);
 
@@ -61,7 +69,7 @@ export function useSpeechSynthesis() {
     }
   }, []);
 
-  const toggleVoiceFeedback = useCallback(() => {
+  const toggle = useCallback(() => {
     setEnabled((prev) => !prev);
   }, []);
 
@@ -69,7 +77,8 @@ export function useSpeechSynthesis() {
     speak,
     stop,
     isSpeaking,
-    voiceFeedbackEnabled: enabled,
-    toggleVoiceFeedback,
+    enabled,
+    toggle,
+    voices,
   };
 }

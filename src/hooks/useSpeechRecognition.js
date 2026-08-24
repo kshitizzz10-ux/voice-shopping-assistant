@@ -10,6 +10,7 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
   const recognitionRef = useRef(null);
   const onCommandRef = useRef(onCommandDetected);
   const isListeningRef = useRef(false);
+  const lastProcessedRef = useRef('');
   const silenceTimerRef = useRef(null);
 
   useEffect(() => {
@@ -54,53 +55,71 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
         setInterimTranscript(interimStr);
       }
 
-      const activeText = (finalStr || interimStr).trim();
-
-      if (activeText) {
-        if (silenceTimerRef.current) {
-          clearTimeout(silenceTimerRef.current);
+      // If final transcript is available from browser
+      if (finalStr.trim()) {
+        const command = finalStr.trim();
+        if (command && command !== lastProcessedRef.current) {
+          lastProcessedRef.current = command;
+          setTranscript(command);
+          setInterimTranscript('');
+          if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+          if (onCommandRef.current) {
+            onCommandRef.current(command);
+          }
         }
-
-        // Auto-dispatch command after user finishes speaking phrase
+      } else if (interimStr.trim()) {
+        // Fallback debounce in case browser delays isFinal
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
         silenceTimerRef.current = setTimeout(() => {
-          if (activeText && isListeningRef.current) {
-            setTranscript(activeText);
+          const command = interimStr.trim();
+          if (command && command !== lastProcessedRef.current && isListeningRef.current) {
+            lastProcessedRef.current = command;
+            setTranscript(command);
             setInterimTranscript('');
             if (onCommandRef.current) {
-              onCommandRef.current(activeText);
+              onCommandRef.current(command);
             }
           }
-        }, 1100);
+        }, 1200);
       }
     };
 
     recognition.onerror = (event) => {
-      console.warn('Speech recognition event error:', event.error);
+      console.warn('Speech recognition error:', event.error);
       if (event.error === 'not-allowed') {
-        setError('Microphone access blocked. Please allow microphone in browser URL settings.');
+        setError('Microphone access blocked. Click the lock icon in your browser URL bar to allow microphone.');
         isListeningRef.current = false;
         setIsListening(false);
       } else if (event.error === 'no-speech') {
-        // No speech detected in chunk; keep listening if user hasn't clicked stop
+        // Normal silence between sentences; keep listening
       } else if (event.error === 'network') {
-        setError('Network error with speech recognition. Please check internet connection.');
+        setError('Network connection error with speech recognition.');
         isListeningRef.current = false;
         setIsListening(false);
       } else if (event.error === 'aborted') {
-        // Normal abort
+        // Ignore normal abort
       } else {
-        setError(`Speech notice: ${event.error}`);
+        setError(`Speech error: ${event.error}`);
       }
     };
 
     recognition.onend = () => {
-      // If user still wants to listen, auto restart
+      // Auto restart if user is in continuous listening mode
       if (isListeningRef.current) {
         try {
           recognition.start();
         } catch {
-          isListeningRef.current = false;
-          setIsListening(false);
+          // If browser throttles, retry in 300ms
+          setTimeout(() => {
+            if (isListeningRef.current) {
+              try {
+                recognition.start();
+              } catch {
+                isListeningRef.current = false;
+                setIsListening(false);
+              }
+            }
+          }, 300);
         }
       } else {
         setIsListening(false);
@@ -120,7 +139,7 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
         }
       }
     };
-  }, [lang]); // MUST ONLY DEPEND ON [lang], NEVER [isListening]!
+  }, [lang]);
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current || !isSupported) return;
@@ -128,11 +147,12 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
       setError(null);
       setTranscript('');
       setInterimTranscript('');
+      lastProcessedRef.current = '';
       isListeningRef.current = true;
       setIsListening(true);
       recognitionRef.current.start();
-    } catch (e) {
-      console.log('Recognition already active or starting:', e);
+    } catch {
+      // already active
     }
   }, [isSupported]);
 
