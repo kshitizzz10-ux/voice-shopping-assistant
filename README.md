@@ -5,7 +5,7 @@
 ---
 
 ## 🌟 Live Demo & Preview
-- **Live Application**: [https://voice-shopping-assistant.vercel.app](https://voice-shopping-assistant.vercel.app)
+- **Live Application (GCP / Firebase)**: [https://voice-shopping-assistant-45ed3.web.app](https://voice-shopping-assistant-45ed3.web.app)
 - **Repository**: [https://github.com/kshitizzz10-ux/voice-shopping-assistant](https://github.com/kshitizzz10-ux/voice-shopping-assistant)
 
 ---
