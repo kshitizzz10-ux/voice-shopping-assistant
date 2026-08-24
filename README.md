@@ -10,7 +10,7 @@
 
 ---
 
-## 📝 Approach & Technical Architecture (200 Words)
+## 📝 Approach & Technical Architecture 
 
 VoiceCart is architected as an offline-first, client-driven Progressive Web Application designed for seamless voice interactions without backend latency. Utilizing the browser-native **Web Speech API (`SpeechRecognition` and `SpeechSynthesis`)**, the system captures spoken audio and provides real-time audio confirmations across 5 languages (English, Hindi, Spanish, French, German).
 
