@@ -9,7 +9,7 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
 
   const recognitionRef = useRef(null);
   const onCommandRef = useRef(onCommandDetected);
-  const isExplicitStopRef = useRef(false);
+  const isListeningRef = useRef(false);
   const silenceTimerRef = useRef(null);
 
   useEffect(() => {
@@ -32,9 +32,9 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
+      isListeningRef.current = true;
       setIsListening(true);
       setError(null);
-      isExplicitStopRef.current = false;
     };
 
     recognition.onresult = (event) => {
@@ -54,48 +54,52 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
         setInterimTranscript(interimStr);
       }
 
-      const spokenText = (finalStr || interimStr).trim();
+      const activeText = (finalStr || interimStr).trim();
 
-      if (spokenText) {
-        // Reset debounce timer on speech activity
+      if (activeText) {
         if (silenceTimerRef.current) {
           clearTimeout(silenceTimerRef.current);
         }
 
+        // Auto-dispatch command after user finishes speaking phrase
         silenceTimerRef.current = setTimeout(() => {
-          if (spokenText) {
-            setTranscript(spokenText);
+          if (activeText && isListeningRef.current) {
+            setTranscript(activeText);
             setInterimTranscript('');
             if (onCommandRef.current) {
-              onCommandRef.current(spokenText);
+              onCommandRef.current(activeText);
             }
           }
-        }, 1200);
+        }, 1100);
       }
     };
 
     recognition.onerror = (event) => {
-      console.warn('Speech recognition error:', event.error);
+      console.warn('Speech recognition event error:', event.error);
       if (event.error === 'not-allowed') {
-        setError('Microphone access denied. Please click the padlock icon in your browser URL bar to allow microphone.');
+        setError('Microphone access blocked. Please allow microphone in browser URL settings.');
+        isListeningRef.current = false;
         setIsListening(false);
       } else if (event.error === 'no-speech') {
-        // Continuous listening can have no-speech events; ignore
+        // No speech detected in chunk; keep listening if user hasn't clicked stop
       } else if (event.error === 'network') {
-        setError('Network error with speech recognition service.');
+        setError('Network error with speech recognition. Please check internet connection.');
+        isListeningRef.current = false;
         setIsListening(false);
+      } else if (event.error === 'aborted') {
+        // Normal abort
       } else {
-        setError(`Speech error: ${event.error}`);
-        setIsListening(false);
+        setError(`Speech notice: ${event.error}`);
       }
     };
 
     recognition.onend = () => {
-      // Auto-restart continuous listening if not explicitly stopped by user
-      if (!isExplicitStopRef.current && isListening) {
+      // If user still wants to listen, auto restart
+      if (isListeningRef.current) {
         try {
           recognition.start();
         } catch {
+          isListeningRef.current = false;
           setIsListening(false);
         }
       } else {
@@ -106,7 +110,7 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
     recognitionRef.current = recognition;
 
     return () => {
-      isExplicitStopRef.current = true;
+      isListeningRef.current = false;
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       if (recognitionRef.current) {
         try {
@@ -116,7 +120,7 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
         }
       }
     };
-  }, [lang, isListening]);
+  }, [lang]); // MUST ONLY DEPEND ON [lang], NEVER [isListening]!
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current || !isSupported) return;
@@ -124,33 +128,34 @@ export function useSpeechRecognition({ lang = 'en-IN', onCommandDetected } = {})
       setError(null);
       setTranscript('');
       setInterimTranscript('');
-      isExplicitStopRef.current = false;
-      recognitionRef.current.start();
+      isListeningRef.current = true;
       setIsListening(true);
-    } catch {
-      // Already running
+      recognitionRef.current.start();
+    } catch (e) {
+      console.log('Recognition already active or starting:', e);
     }
   }, [isSupported]);
 
   const stopListening = useCallback(() => {
-    if (!recognitionRef.current) return;
-    try {
-      isExplicitStopRef.current = true;
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-      recognitionRef.current.stop();
-      setIsListening(false);
-    } catch {
-      // Already stopped
+    isListeningRef.current = false;
+    setIsListening(false);
+    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {
+        // ignore
+      }
     }
   }, []);
 
   const toggleListening = useCallback(() => {
-    if (isListening) {
+    if (isListeningRef.current) {
       stopListening();
     } else {
       startListening();
     }
-  }, [isListening, startListening, stopListening]);
+  }, [startListening, stopListening]);
 
   return {
     isListening,
