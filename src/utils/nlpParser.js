@@ -60,15 +60,11 @@ const NUMBER_WORDS = {
   'fünf': 5,
 };
 
-/**
- * Extracts numeric quantity and unit from a text snippet.
- */
 function extractQuantityAndUnit(text) {
   let quantity = 1;
   let unit = 'items';
   let cleanText = text;
 
-  // 1. Check for standard numeric patterns (e.g., "3 bottles of", "2.5 kg", "1 loaf")
   const numRegex = /^(\d+(\.\d+)?)\s*([a-zA-Z]+)?(\s+of)?\s*/i;
   const numMatch = cleanText.match(numRegex);
 
@@ -80,13 +76,11 @@ function extractQuantityAndUnit(text) {
       unit = candidateUnit;
       cleanText = cleanText.substring(numMatch[0].length);
     } else if (candidateUnit) {
-      // It might be a word like "apples"
       cleanText = cleanText.substring(numMatch[1].length).trim();
     } else {
       cleanText = cleanText.substring(numMatch[0].length);
     }
   } else {
-    // 2. Check for number words (e.g. "two bottles of water", "a dozen eggs")
     for (const [word, val] of Object.entries(NUMBER_WORDS)) {
       const wordRegex = new RegExp(`^${word}\\s+([a-zA-Z]+)?(\\s+of)?\\s*`, 'i');
       const wordMatch = cleanText.match(wordRegex);
@@ -104,26 +98,18 @@ function extractQuantityAndUnit(text) {
     }
   }
 
-  // Remove leading prepositions like "of", "to", "for"
   cleanText = cleanText.replace(/^(of|de|von|ka|ki|ke)\s+/i, '').trim();
 
   return { quantity, unit, itemName: cleanText };
 }
 
-/**
- * Extracts price range filters from search queries.
- * Examples:
- * - "toothpaste under $5"
- * - "olive oil between $5 and $15"
- * - "apples less than 4 dollars"
- */
 function extractPriceRange(text) {
   let minPrice = 0;
-  let maxPrice = 100;
+  let maxPrice = 1000;
   let queryText = text;
 
-  // Pattern: between $X and $Y / between X and Y dollars
-  const betweenMatch = queryText.match(/between\s+\$?(\d+(\.\d+)?)\s*(?:and|to|-)\s*\$?(\d+(\.\d+)?)/i);
+  // Pattern: between ₹/Rs X and ₹/Rs Y / between X and Y rupees
+  const betweenMatch = queryText.match(/between\s+(?:₹|rs\.?|inr)?\s*(\d+(\.\d+)?)\s*(?:and|to|-)\s*(?:₹|rs\.?|inr)?\s*(\d+(\.\d+)?)\s*(?:rupees|rupaye|rs|bucks)?/i);
   if (betweenMatch) {
     minPrice = parseFloat(betweenMatch[1]);
     maxPrice = parseFloat(betweenMatch[3]);
@@ -131,16 +117,24 @@ function extractPriceRange(text) {
     return { minPrice, maxPrice, queryText };
   }
 
-  // Pattern: under $X / less than $X / below $X / sub $X
-  const underMatch = queryText.match(/(?:under|less than|below|cheaper than|max|up to|kam|se kam)\s+\$?(\d+(\.\d+)?)\s*(?:dollars|bucks|rs|rupees|euro|eur)?/i);
+  // Pattern: under / less than / se kam ₹/Rs X
+  const underMatch = queryText.match(/(?:under|less than|below|cheaper than|max|up to|se kam|kam)\s+(?:₹|rs\.?|inr|\$)?\s*(\d+(\.\d+)?)\s*(?:rupees|rupaye|rs|bucks|dollars|inr)?/i);
   if (underMatch) {
     maxPrice = parseFloat(underMatch[1]);
     queryText = queryText.replace(underMatch[0], '').trim();
     return { minPrice, maxPrice, queryText };
   }
 
-  // Pattern: above $X / more than $X / over $X
-  const aboveMatch = queryText.match(/(?:above|over|more than|at least)\s+\$?(\d+(\.\d+)?)\s*(?:dollars|bucks|rs|rupees|euro|eur)?/i);
+  // Pattern: X rupees se kam / X rs under
+  const reverseUnderMatch = queryText.match(/(\d+(\.\d+)?)\s*(?:₹|rs\.?|rupees|rupaye)\s*(?:se kam|under|less)/i);
+  if (reverseUnderMatch) {
+    maxPrice = parseFloat(reverseUnderMatch[1]);
+    queryText = queryText.replace(reverseUnderMatch[0], '').trim();
+    return { minPrice, maxPrice, queryText };
+  }
+
+  // Pattern: above / more than ₹/Rs X
+  const aboveMatch = queryText.match(/(?:above|over|more than|at least|se jyada)\s+(?:₹|rs\.?|inr|\$)?\s*(\d+(\.\d+)?)\s*(?:rupees|rupaye|rs|bucks|inr)?/i);
   if (aboveMatch) {
     minPrice = parseFloat(aboveMatch[1]);
     queryText = queryText.replace(aboveMatch[0], '').trim();
@@ -150,10 +144,7 @@ function extractPriceRange(text) {
   return { minPrice, maxPrice, queryText };
 }
 
-/**
- * Parses raw voice transcript into structured intent and entities.
- */
-export function parseVoiceCommand(transcript, langCode = 'en-US') {
+export function parseVoiceCommand(transcript, langCode = 'en-IN') {
   if (!transcript || typeof transcript !== 'string') {
     return { intent: 'UNKNOWN', raw: transcript };
   }
@@ -183,10 +174,9 @@ export function parseVoiceCommand(transcript, langCode = 'en-US') {
 
   // 2. Check for SEARCH command
   const isSearch = dict.searchWords.some((w) => lowerText.startsWith(w) || lowerText.includes(w + ' ')) ||
-    lowerText.match(/^(find|search|look for|show me|where is|dhoondho|buscar|chercher|suchen)\b/i);
+    lowerText.match(/^(find|search|look for|show me|where is|dhoondho|kahan hai|dikhao|buscar|chercher|suchen)\b/i);
 
   if (isSearch) {
-    // Strip search trigger keywords
     let queryBody = lowerText;
     for (const sw of dict.searchWords) {
       queryBody = queryBody.replace(new RegExp(`^${sw}\\s+`, 'i'), '');
@@ -195,7 +185,7 @@ export function parseVoiceCommand(transcript, langCode = 'en-US') {
     queryBody = queryBody.replace(/^(me|for|un|une|des|el|la|los|las|mein|ko)\s+/i, '').trim();
 
     const { minPrice, maxPrice, queryText } = extractPriceRange(queryBody);
-    const organic = queryText.includes('organic') || queryText.includes('jaivik');
+    const organic = queryText.includes('organic') || queryText.includes('jaivik') || queryText.includes('desi');
     const cleanSearchQuery = queryText.replace(/\borganic\b/gi, '').replace(/\s+/g, ' ').trim();
 
     return {
@@ -208,12 +198,11 @@ export function parseVoiceCommand(transcript, langCode = 'en-US') {
     };
   }
 
-  // 3. Check for MODIFY command (e.g. "Change milk quantity to 3", "Update bread to 2")
+  // 3. Check for MODIFY command
   const isModify = dict.modifyWords.some((w) => lowerText.startsWith(w) || lowerText.includes(w + ' ')) ||
-    lowerText.match(/^(change|update|set|modify|make|badlo)\b/i);
+    lowerText.match(/^(change|update|set|modify|make|badlo|karo)\b/i);
 
   if (isModify) {
-    // Match: "change [item] [quantity to X / to X]"
     const modifyMatch = lowerText.match(/(?:change|update|set|make|badlo)\s+(?:the\s+)?([a-z0-9\s]+?)\s+(?:quantity\s+)?(?:to|as|into|ko)\s+(\d+|one|two|three|four|five|six|seven|eight|nine|ten)/i);
     if (modifyMatch) {
       const itemTarget = modifyMatch[1].trim();
@@ -230,17 +219,16 @@ export function parseVoiceCommand(transcript, langCode = 'en-US') {
 
   // 4. Check for REMOVE / DELETE command
   const isRemove = dict.removeWords.some((w) => lowerText.startsWith(w) || lowerText.includes(w + ' ')) ||
-    lowerText.match(/^(remove|delete|take off|drop|eliminate|hatao|quitar|supprimer|entfernen)\b/i);
+    lowerText.match(/^(remove|delete|take off|drop|eliminate|hatao|nikalo|quitar|supprimer|entfernen)\b/i);
 
   if (isRemove) {
     let itemToRemove = lowerText;
     for (const rw of dict.removeWords) {
       itemToRemove = itemToRemove.replace(new RegExp(`^${rw}\\s+`, 'i'), '');
     }
-    // Clean fillers like "from my list", "off the list", "se", "de la liste"
     itemToRemove = itemToRemove
       .replace(/\s+(from|off|in)?\s*(my|the)?\s*list\b/gi, '')
-      .replace(/\s+(list se|se hatao)\b/gi, '')
+      .replace(/\s+(list se|se hatao|se nikalo)\b/gi, '')
       .replace(/^(the|a|an|some|el|la|le|la|les|ein|eine)\s+/i, '')
       .trim();
 
@@ -251,14 +239,13 @@ export function parseVoiceCommand(transcript, langCode = 'en-US') {
     };
   }
 
-  // 5. Check for ADD command or natural statement (Default / Fallback)
+  // 5. Check for ADD command or natural statement
   let addBody = lowerText;
   
-  // Remove known add prefixes
   const addPrefixes = [
     'add', 'i need to buy', 'i need', 'i want to buy', 'i want', 'buy', 'get me', 'get',
     'put', 'pick up', 'bring', 'please add', 'can you add', 'put on the list',
-    'mujhe chahiye', 'le aao', 'kharidna hai', 'jodo',
+    'mujhe chahiye', 'le aao', 'kharidna hai', 'jodo', 'daalo', 'shamil karo',
     'añadir', 'agregar', 'necesito', 'quiero comprar',
     'ajouter', 'j\'ai besoin de', 'je veux',
     'hinzufügen', 'ich brauche', 'ich möchte'
@@ -271,13 +258,11 @@ export function parseVoiceCommand(transcript, langCode = 'en-US') {
     }
   }
 
-  // Clean trailing phrases ("to my list", "on the list", "in my cart", "ko list me jodo")
   addBody = addBody
     .replace(/\s+(to|on|into|in)\s+(my|the)?\s*(shopping\s+)?(list|cart)\b/gi, '')
-    .replace(/\s+(list me|list mein|ko jodo)\b/gi, '')
+    .replace(/\s+(list me|list mein|ko jodo|daal do)\b/gi, '')
     .trim();
 
-  // Support compound additions like "2 apples and 3 bananas"
   const andParts = addBody.split(/\s+(?:and|aur|y|et|und)\s+/i);
   const itemsToAdd = andParts.map((part) => {
     const cleanPart = part.replace(/^(the|some|a|an|few)\s+/i, '').trim();

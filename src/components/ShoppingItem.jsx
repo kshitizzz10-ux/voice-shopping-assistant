@@ -1,12 +1,12 @@
 import React from 'react';
-import { useShopping } from '../context/ShoppingContext';
-import { QuantityControl } from './QuantityControl';
-import { CATEGORY_METADATA } from '../utils/constants';
-import { findSubstitutes } from '../utils/substituteMap';
+import { useShopping } from '../context/ShoppingContext.jsx';
+import { QuantityControl } from './QuantityControl.jsx';
+import { CATEGORY_METADATA, CURRENCY } from '../utils/constants.js';
+import { findSubstitutes } from '../utils/substituteMap.js';
 import { Trash2, Check, Sparkles } from 'lucide-react';
 
 export function ShoppingItem({ item, onSelectSubstitute }) {
-  const { toggleItemChecked, updateItemQuantity, removeItem } = useShopping();
+  const { toggleItemChecked, updateItemQuantity, removeItem, currency = CURRENCY } = useShopping();
 
   const meta = CATEGORY_METADATA[item.category] || CATEGORY_METADATA['Other Items'];
   const substitutes = findSubstitutes(item.name);
@@ -21,7 +21,6 @@ export function ShoppingItem({ item, onSelectSubstitute }) {
     >
       {/* Left section: Checkbox & Name */}
       <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
-        {/* Custom Checkbox */}
         <button
           type="button"
           onClick={() => toggleItemChecked(item.id)}
@@ -35,7 +34,6 @@ export function ShoppingItem({ item, onSelectSubstitute }) {
           {item.checked && <Check className="w-4 h-4 stroke-[3]" />}
         </button>
 
-        {/* Text Details */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span
@@ -46,7 +44,6 @@ export function ShoppingItem({ item, onSelectSubstitute }) {
               {item.name}
             </span>
 
-            {/* Category Badge */}
             <span
               className={`text-[11px] font-medium px-2 py-0.5 rounded-full border ${meta.badgeClass}`}
             >
@@ -54,7 +51,6 @@ export function ShoppingItem({ item, onSelectSubstitute }) {
             </span>
           </div>
 
-          {/* Subtitle: Brand, Unit, Price */}
           <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
             {item.brand && <span className="font-medium text-slate-600">{item.brand}</span>}
             <span>•</span>
@@ -65,13 +61,12 @@ export function ShoppingItem({ item, onSelectSubstitute }) {
               <>
                 <span>•</span>
                 <span className="font-medium text-slate-700">
-                  ${(item.price * item.quantity).toFixed(2)} (${item.price}/ea)
+                  {currency}{(item.price * item.quantity).toFixed(0)} ({currency}{item.price}/ea)
                 </span>
               </>
             )}
           </div>
 
-          {/* Substitutes Quick Tip */}
           {!item.checked && substitutes.length > 0 && onSelectSubstitute && (
             <button
               type="button"
@@ -85,7 +80,6 @@ export function ShoppingItem({ item, onSelectSubstitute }) {
         </div>
       </div>
 
-      {/* Right section: Quantity controls & Delete */}
       <div className="flex items-center justify-between sm:justify-end gap-3 mt-3 sm:mt-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
         <QuantityControl
           quantity={item.quantity}

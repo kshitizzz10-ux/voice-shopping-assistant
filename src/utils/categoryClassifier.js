@@ -4,49 +4,59 @@ import { PRODUCT_CATALOG } from './productDatabase.js';
 const CATEGORY_KEYWORDS = {
   [CATEGORIES.PRODUCE]: [
     'apple', 'apples', 'banana', 'bananas', 'orange', 'oranges', 'berry', 'berries', 'strawberry', 'strawberries',
-    'blueberry', 'blueberries', 'spinach', 'kale', 'lettuce', 'avocado', 'avocados', 'tomato', 'tomatoes',
-    'cucumber', 'cucumbers', 'broccoli', 'carrot', 'carrots', 'onion', 'onions', 'garlic', 'potato', 'potatoes',
-    'grape', 'grapes', 'lemon', 'lemons', 'lime', 'limes', 'pepper', 'peppers', 'ginger', 'mushroom', 'mushrooms',
-    'watermelon', 'melon', 'mango', 'mangoes', 'peach', 'peaches', 'celery', 'zucchini', 'cilantro', 'parsley',
-    'mint', 'corn', 'squash', 'herbs', 'salad', 'fruit', 'fruits', 'vegetable', 'vegetables', 'sabzi', 'fal', 'aalu', 'pyaaz', 'tamatar'
+    'spinach', 'palak', 'methi', 'lettuce', 'avocado', 'avocados', 'tomato', 'tomatoes', 'tamatar',
+    'cucumber', 'kheera', 'kakdi', 'broccoli', 'carrot', 'carrots', 'gajar', 'onion', 'onions', 'pyaaz',
+    'garlic', 'lahsun', 'potato', 'potatoes', 'aalu', 'grape', 'grapes', 'angoor', 'lemon', 'lemons', 'nimbu',
+    'pepper', 'peppers', 'shimla mirch', 'ginger', 'adrak', 'mushroom', 'mushrooms', 'watermelon', 'tarbooj',
+    'mango', 'mangoes', 'aam', 'peach', 'gobhi', 'cauliflower', 'cabbage', 'patta gobhi', 'bhindi', 'okra',
+    'ladyfinger', 'karela', 'lauki', 'bottle gourd', 'tinda', 'matar', 'peas', 'dhaniya', 'coriander', 'pudina',
+    'mint', 'mirch', 'chilli', 'green chilli', 'curry patta', 'kadipatta', 'fruit', 'fruits', 'vegetable', 'vegetables', 'sabzi', 'fal'
   ],
   [CATEGORIES.DAIRY_EGGS]: [
-    'milk', 'doodh', 'egg', 'eggs', 'anda', 'ande', 'butter', 'makhan', 'cheese', 'paneer', 'yogurt', 'curd',
-    'dahi', 'ghee', 'cream', 'creamer', 'sour cream', 'whipping cream', 'cottage cheese', 'parmesan', 'cheddar',
-    'mozzarella', 'almond milk', 'oat milk', 'soy milk'
+    'milk', 'doodh', 'toned milk', 'cow milk', 'egg', 'eggs', 'anda', 'ande', 'butter', 'makhan', 'amul butter',
+    'cheese', 'paneer', 'cottage cheese', 'yogurt', 'curd', 'dahi', 'ghee', 'desi ghee', 'cream', 'malai',
+    'sour cream', 'whipping cream', 'parmesan', 'cheddar', 'mozzarella', 'almond milk', 'oat milk', 'soya milk', 'sofit'
   ],
   [CATEGORIES.BAKERY]: [
-    'bread', 'roti', 'loaf', 'loaves', 'bagel', 'bagels', 'croissant', 'croissants', 'muffin', 'muffins',
-    'tortilla', 'tortillas', 'bun', 'buns', 'pita', 'naan', 'sourdough', 'pastry', 'toast', 'baguette', 'cake', 'cookies'
+    'bread', 'atta bread', 'white bread', 'brown bread', 'multigrain bread', 'sourdough', 'pav', 'bombay pav',
+    'burger bun', 'buns', 'parota', 'paratha', 'chapati', 'roti', 'phulka', 'naan', 'croissant', 'cake',
+    'fruit cake', 'rusk', 'toast', 'khari', 'bagel', 'muffin'
   ],
   [CATEGORIES.MEAT_SEAFOOD]: [
-    'chicken', 'murga', 'beef', 'steak', 'pork', 'bacon', 'turkey', 'fish', 'machli', 'salmon', 'tuna',
-    'shrimp', 'prawns', 'meat', 'mutton', 'lamb', 'sausage', 'ham', 'crab', 'lobster', 'cod', 'ribs'
+    'chicken', 'boneless chicken', 'murga', 'fish', 'machli', 'rohu', 'surmai', 'prawns', 'shrimp', 'mutton',
+    'gosht', 'lamb', 'keema', 'egg', 'meat', 'seafood', 'tikka', 'kebab'
   ],
   [CATEGORIES.PANTRY]: [
-    'oil', 'olive oil', 'tel', 'rice', 'chawal', 'pasta', 'flour', 'atta', 'sugar', 'cheeni', 'salt', 'namak',
-    'honey', 'syrup', 'beans', 'lentils', 'dal', 'sauce', 'marinara', 'vinegar', 'soy sauce', 'spice', 'spices',
-    'masala', 'quinoa', 'peanut butter', 'almond butter', 'cereal', 'oats', 'chickpeas', 'ketchup', 'mayonnaise', 'mustard'
+    'oil', 'tel', 'mustard oil', 'sarson tel', 'sunflower oil', 'refined oil', 'olive oil', 'coconut oil',
+    'atta', 'flour', 'chakki atta', 'maida', 'suji', 'rawa', 'besan', 'rice', 'chawal', 'basmati', 'dal',
+    'toor dal', 'arhar dal', 'moong dal', 'chana dal', 'urad dal', 'masoor dal', 'rajma', 'chole', 'kabuli chana',
+    'salt', 'namak', 'tata salt', 'sugar', 'cheeni', 'jaggery', 'gur', 'shakkar', 'honey', 'shahad',
+    'haldi', 'turmeric', 'mirch powder', 'deggi mirch', 'dhaniya powder', 'garam masala', 'jeera', 'cumin',
+    'rai', 'mustard seeds', 'hing', 'asafoetida', 'sauce', 'ketchup', 'maggi', 'noodles', 'pasta', 'peanut butter'
   ],
   [CATEGORIES.BEVERAGES]: [
-    'water', 'pani', 'juice', 'ras', 'coffee', 'chai', 'tea', 'soda', 'coke', 'pepsi', 'lemonade', 'kombucha',
-    'latte', 'espresso', 'sparkling water', 'beer', 'wine', 'energy drink', 'smoothie'
+    'chai', 'tea', 'tata tea', 'wagh bakri', 'green tea', 'tulsi tea', 'coffee', 'nescafe', 'bru', 'filter coffee',
+    'water', 'pani', 'kinley', 'bisleri', 'aquafina', 'soda', 'cold drink', 'coke', 'pepsi', 'thums up', 'sprite',
+    'frooti', 'maaza', 'real juice', 'juice', 'rooh afza', 'sharbat', 'bournvita', 'horlicks', 'complan'
   ],
   [CATEGORIES.SNACKS]: [
-    'chips', 'crisps', 'popcorn', 'chocolate', 'biscuit', 'biscuits', 'cookies', 'nuts', 'crackers', 'gummy',
-    'candy', 'snack', 'bars', 'granola bar', 'pretzels', 'namkeen', 'trail mix'
+    'bhujia', 'aloo bhujia', 'khatta meetha', 'namkeen', 'sev', 'mixture', 'biscuit', 'parle-g', 'good day',
+    'marie gold', 'oreo', 'bourbon', 'chips', 'lays', 'kurkure', 'bingo', 'nachos', 'popcorn', 'makhana',
+    'chocolate', 'dairy milk', 'silk', '5 star', 'kitkat', 'kaju', 'cashew', 'badam', 'almond', 'pista', 'kishmish', 'dry fruits'
   ],
   [CATEGORIES.FROZEN]: [
-    'frozen', 'ice cream', 'pizza', 'frozen pizza', 'frozen berries', 'frozen vegetables', 'edamame', 'frozen meals',
-    'ice', 'waffles', 'popsicles'
+    'frozen', 'frozen matar', 'frozen peas', 'french fries', 'mccain', 'smiles', 'ice cream', 'amul ice cream',
+    'kwality walls', 'kulfi', 'matka kulfi', 'chocobar', 'cone'
   ],
   [CATEGORIES.PERSONAL_CARE]: [
-    'toothpaste', 'soap', 'shampoo', 'conditioner', 'body wash', 'lotion', 'face wash', 'cleanser', 'sunscreen',
-    'lip balm', 'deodorant', 'razor', 'floss', 'tampons', 'pads', 'skincare', 'perfume', 'brush', 'toothbrush'
+    'colgate', 'toothpaste', 'brush', 'toothbrush', 'dabur red', 'sensodyne', 'dettol', 'soap', 'dove', 'pears',
+    'lifebuoy', 'shampoo', 'head and shoulders', 'clinic plus', 'pantene', 'hair oil', 'parachute', 'coconut oil',
+    'cream', 'moisturizer', 'nivea', 'fair and lovely', 'face wash', 'himalaya neem', 'sunscreen', 'boroplus', 'vaseline'
   ],
   [CATEGORIES.HOUSEHOLD]: [
-    'detergent', 'dish soap', 'paper towel', 'paper towels', 'toilet paper', 'wipes', 'trash bags', 'garbage bags',
-    'cleaner', 'bleach', 'sponge', 'foil', 'ziploc', 'light bulb', 'tissues', 'napkins'
+    'surf excel', 'detergent', 'tide', 'ariel', 'wheel', 'ghadi', 'rin', 'vim', 'dishwash', 'pril', 'lizol',
+    'floor cleaner', 'harpic', 'toilet cleaner', 'colin', 'hit', 'good knight', 'all out', 'garbage bags',
+    'tissue', 'kitchen towel', 'napkin', 'sponge', 'scotch brite', 'broom', 'pocha'
   ]
 };
 

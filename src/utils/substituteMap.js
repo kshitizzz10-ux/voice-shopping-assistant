@@ -1,124 +1,96 @@
 export const SUBSTITUTE_MAP = {
-  // Dairy Alternatives
+  // Dairy & Paneer Alternatives
   'milk': [
-    { name: 'Unsweetened Almond Milk', reason: 'Dairy-Free & Low Calorie', category: 'Dairy & Eggs', icon: '🥛' },
-    { name: 'Creamy Oat Milk', reason: 'Rich & Plant-Based', category: 'Dairy & Eggs', icon: '🌾' },
-    { name: 'Organic Soy Milk', reason: 'High Protein Alternative', category: 'Dairy & Eggs', icon: '🌱' },
-    { name: 'Coconut Milk', reason: 'Tropical & Lactose-Free', category: 'Dairy & Eggs', icon: '🥥' },
+    { name: 'Raw Pressery Almond Milk', reason: 'Dairy-Free & Lactose-Free', category: 'Dairy & Eggs', icon: '🥛' },
+    { name: 'Oatly Oat Milk', reason: 'Rich, Creamy & Plant-Based', category: 'Dairy & Eggs', icon: '🌾' },
+    { name: 'Sofit Soya Milk', reason: 'High Protein Plant Alternative', category: 'Dairy & Eggs', icon: '🌱' },
+    { name: 'Mother Dairy Cow Milk', reason: 'Lighter & Easier Digestion', category: 'Dairy & Eggs', icon: '🥛' },
   ],
-  'whole milk': [
-    { name: 'Creamy Oat Milk', reason: 'Closest creamy texture without dairy', category: 'Dairy & Eggs', icon: '🌾' },
-    { name: 'Unsweetened Almond Milk', reason: 'Light & Plant-Based', category: 'Dairy & Eggs', icon: '🥛' },
+  'paneer': [
+    { name: 'Organic Soya Tofu (200g)', reason: '100% Vegan & Low-Fat Protein', category: 'Produce & Veggies', icon: '🧈' },
+    { name: 'Fresh Soya Chaap (500g)', reason: 'High Protein Plant Alternative', category: 'Pantry & Masalas', icon: '🌱' },
+    { name: 'Sprouted Green Moong (500g)', reason: 'Natural Whole Food Protein', category: 'Pantry & Masalas', icon: '🫘' },
   ],
   'butter': [
-    { name: 'Plant-Based Butter', reason: 'Vegan & Dairy-Free', category: 'Dairy & Eggs', icon: '🧈' },
-    { name: 'Organic Coconut Oil', reason: 'Healthy Baking Substitute', category: 'Pantry & Condiments', icon: '🥥' },
-    { name: 'Extra Virgin Olive Oil', reason: 'Heart-Healthy Sautéing', category: 'Pantry & Condiments', icon: '🫒' },
-    { name: 'Pure Ghee', reason: 'Lactose-Free Clarified Butter', category: 'Dairy & Eggs', icon: '✨' },
+    { name: 'Pure Desi Ghee', reason: 'Lactose-Free Clarified Butter', category: 'Dairy & Eggs', icon: '✨' },
+    { name: 'Nutralite DoodhShakti Butter Spread', reason: 'Zero Cholesterol Table Spread', category: 'Dairy & Eggs', icon: '🧈' },
+    { name: 'Fortune Mustard Oil / Sarson Tel', reason: 'Heart-Healthy Traditional Cooking', category: 'Pantry & Masalas', icon: '🫒' },
   ],
-  'cheese': [
-    { name: 'Plant-Based Shredded Cheddar', reason: 'Dairy-Free & Melts Well', category: 'Dairy & Eggs', icon: '🧀' },
-    { name: 'Nutritional Yeast', reason: 'Savory Cheesy Flavor (Vegan)', category: 'Pantry & Condiments', icon: '✨' },
+  'curd': [
+    { name: 'Epigamia Greek Yogurt (Plain)', reason: '2x Protein & Low Fat', category: 'Dairy & Eggs', icon: '🥣' },
+    { name: 'Coconut Milk Dahi', reason: 'Dairy-Free Probiotic Alternative', category: 'Dairy & Eggs', icon: '🥥' },
   ],
-  'yogurt': [
-    { name: 'Coconut Milk Yogurt', reason: 'Creamy & Probiotic Rich', category: 'Dairy & Eggs', icon: '🥥' },
-    { name: 'Almond Milk Yogurt', reason: 'Light & Dairy-Free', category: 'Dairy & Eggs', icon: '🥛' },
-  ],
-  'sour cream': [
-    { name: 'Greek Plain Yogurt', reason: 'Higher Protein Alternative', category: 'Dairy & Eggs', icon: '🥣' },
-    { name: 'Cashew Sour Cream', reason: 'Vegan & Tangy', category: 'Dairy & Eggs', icon: '🌱' },
+  'dahi': [
+    { name: 'Epigamia Greek Yogurt (Plain)', reason: '2x Protein & Low Fat', category: 'Dairy & Eggs', icon: '🥣' },
+    { name: 'Coconut Milk Dahi', reason: 'Dairy-Free Probiotic Alternative', category: 'Dairy & Eggs', icon: '🥥' },
   ],
 
   // Sweeteners & Sugar
   'sugar': [
-    { name: 'Raw Unfiltered Honey', reason: 'Natural Antioxidant Sweetener', category: 'Pantry & Condiments', icon: '🍯' },
-    { name: '100% Pure Maple Syrup', reason: 'Unrefined Natural Sweetener', category: 'Pantry & Condiments', icon: '🍁' },
-    { name: 'Organic Stevia Sweetener', reason: 'Zero-Calorie & Keto-Friendly', category: 'Pantry & Condiments', icon: '🌿' },
-    { name: 'Monk Fruit Sweetener', reason: 'Zero Glycemic Impact', category: 'Pantry & Condiments', icon: '🍈' },
+    { name: 'Organic Jaggery Powder / Gur', reason: 'Unrefined & Rich in Iron', category: 'Pantry & Masalas', icon: '🪵' },
+    { name: 'Dabur 100% Pure Honey', reason: 'Natural Antioxidant Sweetener', category: 'Pantry & Masalas', icon: '🍯' },
+    { name: 'SugarFree Green Stevia', reason: '100% Natural Zero Calorie', category: 'Pantry & Masalas', icon: '🌿' },
+    { name: 'Desi Khand / Raw Cane Sugar', reason: 'Chemical-Free Traditional Sweetener', category: 'Pantry & Masalas', icon: '🌾' },
   ],
-  'white sugar': [
-    { name: 'Organic Stevia Sweetener', reason: 'Zero Sugar & Low Carb', category: 'Pantry & Condiments', icon: '🌿' },
-    { name: 'Coconut Sugar', reason: 'Lower Glycemic Index', category: 'Pantry & Condiments', icon: '🥥' },
+  'cheeni': [
+    { name: 'Organic Jaggery Powder / Gur', reason: 'Iron-Rich Natural Sweetener', category: 'Pantry & Masalas', icon: '🪵' },
+    { name: 'SugarFree Green Stevia', reason: 'Zero Calorie Sweetener', category: 'Pantry & Masalas', icon: '🌿' },
   ],
 
-  // Bakery & Grains (Gluten-Free)
+  // Breads, Flours & Grains (Gluten-Free & Healthy)
   'bread': [
-    { name: 'Gluten-Free White Bread', reason: 'Celiac & Wheat-Free Safe', category: 'Bakery', icon: '🍞' },
-    { name: 'Artisan Sourdough Loaf', reason: 'Fermented & Easier to Digest', category: 'Bakery', icon: '🥖' },
-    { name: 'Ezekiel Sprouted Bread', reason: 'Nutrient-Dense & Low GI', category: 'Bakery', icon: '🌾' },
-  ],
-  'wheat bread': [
-    { name: 'Gluten-Free Multi-Seed Bread', reason: '100% Gluten-Free', category: 'Bakery', icon: '🍞' },
-    { name: 'Rye Bread', reason: 'High Fiber & Hearty', category: 'Bakery', icon: '🥖' },
-  ],
-  'pasta': [
-    { name: 'Banza Chickpea Pasta', reason: 'Gluten-Free & High Protein', category: 'Pantry & Condiments', icon: '🍝' },
-    { name: 'Brown Rice Pasta', reason: 'Traditional Texture Wheat-Free', category: 'Pantry & Condiments', icon: '🌾' },
-    { name: 'Zucchini Spirals (Zoodles)', reason: 'Low Carb Veggie Option', category: 'Produce', icon: '🥒' },
+    { name: 'Harvest Gold 100% Atta Bread', reason: 'Zero Maida Whole Wheat', category: 'Bakery & Breads', icon: '🍞' },
+    { name: 'English Oven Multi Grain Bread', reason: 'High Fiber Seeds & Grains', category: 'Bakery & Breads', icon: '🌾' },
+    { name: 'The Baker\'s Dozen Sourdough Bread', reason: 'Gut-Friendly Fermented Bread', category: 'Bakery & Breads', icon: '🥖' },
   ],
   'flour': [
-    { name: 'Almond Flour', reason: 'Gluten-Free & Keto-Friendly', category: 'Pantry & Condiments', icon: '🌰' },
-    { name: 'Gluten-Free 1-to-1 Baking Flour', reason: 'Direct Baking Replacement', category: 'Pantry & Condiments', icon: '🌾' },
-    { name: 'Oat Flour', reason: 'Whole Grain & High Fiber', category: 'Pantry & Condiments', icon: '🥣' },
+    { name: 'Aashirvaad Multigrain Atta', reason: '6 Grain Fiber Rich Blend', category: 'Pantry & Masalas', icon: '🌾' },
+    { name: 'Organic Ragi / Finger Millet Flour', reason: 'Gluten-Free & High Calcium', category: 'Pantry & Masalas', icon: '🥣' },
+    { name: 'Besan / Gram Flour', reason: 'High Protein Gluten-Free Flour', category: 'Pantry & Masalas', icon: '🍲' },
+  ],
+  'atta': [
+    { name: 'Aashirvaad Multigrain Atta', reason: 'High Fiber 6-Grain Blend', category: 'Pantry & Masalas', icon: '🌾' },
+    { name: 'Organic Jowar / Sorghum Atta', reason: 'Gluten-Free Ancient Grain', category: 'Pantry & Masalas', icon: '🌾' },
+    { name: 'Organic Ragi Flour', reason: 'Calcium & Iron Superfood', category: 'Pantry & Masalas', icon: '🥣' },
+  ],
+  'maida': [
+    { name: 'Aashirvaad Shudh Chakki Atta', reason: '100% Whole Wheat Alternative', category: 'Pantry & Masalas', icon: '🌾' },
+    { name: 'Organic Suji / Rava', reason: 'Coarse Wheat Semolina', category: 'Pantry & Masalas', icon: '🥣' },
   ],
   'white rice': [
-    { name: 'Organic Quinoa (Tricolor)', reason: 'Complete Protein Supergrain', category: 'Pantry & Condiments', icon: '🌾' },
-    { name: 'Cauliflower Rice', reason: 'Low Carb & Keto-Friendly', category: 'Produce', icon: '🥦' },
-    { name: 'Brown Jasmine Rice', reason: 'Whole Grain Fiber', category: 'Pantry & Condiments', icon: '🍚' },
+    { name: 'Daawat Brown Basmati Rice', reason: 'Low GI & High Fiber', category: 'Pantry & Masalas', icon: '🍚' },
+    { name: 'Organic Quinoa (Tricolor)', reason: 'High Protein Supergrain', category: 'Pantry & Masalas', icon: '🌾' },
+    { name: 'Millets / Foxtail Millet (Kangni)', reason: 'Ancient Diabetic-Friendly Grain', category: 'Pantry & Masalas', icon: '🌾' },
+  ],
+  'rice': [
+    { name: 'Daawat Brown Basmati Rice', reason: 'Low Glycemic Index', category: 'Pantry & Masalas', icon: '🍚' },
+    { name: 'Millets / Little Millet', reason: 'High Fiber Gluten-Free Grain', category: 'Pantry & Masalas', icon: '🌾' },
   ],
 
-  // Meat Substitutes (Vegan / Plant-based)
-  'beef': [
-    { name: 'Beyond Meat Plant-Based Beef', reason: '100% Vegan & High Protein', category: 'Meat & Seafood', icon: '🌱' },
-    { name: 'Organic Black Beans', reason: 'Whole Food Plant Protein', category: 'Pantry & Condiments', icon: '🫘' },
-    { name: 'Portobello Mushrooms', reason: 'Meaty Texture & Low Calorie', category: 'Produce', icon: '🍄' },
-  ],
-  'ground beef': [
-    { name: 'Beyond Meat Plant-Based Beef', reason: 'Vegan Burger Alternative', category: 'Meat & Seafood', icon: '🌱' },
-    { name: 'Organic Firm Tofu (Crumbled)', reason: 'Versatile Plant Protein', category: 'Produce', icon: '🧈' },
-  ],
-  'chicken': [
-    { name: 'Organic Firm Tofu', reason: 'High Protein Plant Alternative', category: 'Produce', icon: '🧈' },
-    { name: 'Tempeh Strips', reason: 'Nutty & Fermented Superfood', category: 'Produce', icon: '🌱' },
-    { name: 'Jackfruit (Canned in Brine)', reason: 'Shredded Pulled Texture', category: 'Pantry & Condiments', icon: '🍈' },
-  ],
-  'bacon': [
-    { name: 'Turkey Bacon', reason: 'Lower Fat Alternative', category: 'Meat & Seafood', icon: '🥓' },
-    { name: 'Tempeh Bacon Strips', reason: 'Smoky Vegan Crisp', category: 'Produce', icon: '🌱' },
+  // Cooking Oils & Fats
+  'oil': [
+    { name: 'Fortune Kachi Ghani Mustard Oil', reason: 'Cold-Pressed Heart Friendly', category: 'Pantry & Masalas', icon: '🫒' },
+    { name: 'Figaro Pure Olive Oil', reason: 'Rich in Antioxidants & Omega-9', category: 'Pantry & Masalas', icon: '🫒' },
+    { name: 'Pure Desi Ghee', reason: 'Aromatic Traditional Cooking Fat', category: 'Dairy & Eggs', icon: '✨' },
+    { name: 'Parachute Cold-Pressed Coconut Oil', reason: 'Medium Chain Triglycerides (MCT)', category: 'Pantry & Masalas', icon: '🥥' },
   ],
 
-  // Spreads & Condiments
-  'peanut butter': [
-    { name: 'Creamy Almond Butter', reason: 'Nutrient-Dense & Paleo', category: 'Pantry & Condiments', icon: '🌰' },
-    { name: 'Sunflower Seed Butter (SunButter)', reason: 'Nut-Free School Safe', category: 'Pantry & Condiments', icon: '🌻' },
-  ],
-  'mayonnaise': [
-    { name: 'Avocado Oil Mayonnaise', reason: 'Healthy Fats & Seed-Oil Free', category: 'Pantry & Condiments', icon: '🥑' },
-    { name: 'Vegan Mayo', reason: 'Egg-Free & Plant-Based', category: 'Pantry & Condiments', icon: '🌱' },
-  ],
-  'soy sauce': [
-    { name: 'Coconut Aminos', reason: 'Soy-Free & Low Sodium', category: 'Pantry & Condiments', icon: '🥥' },
-    { name: 'Tamari Sauce', reason: '100% Gluten-Free Soy Sauce', category: 'Pantry & Condiments', icon: '🍶' },
-  ],
+  // Snacks & Chips
   'chips': [
-    { name: 'Sea Salt Popcorn', reason: 'Whole Grain & Lower Calorie', category: 'Snacks & Sweets', icon: '🍿' },
-    { name: 'Baked Veggie Crisps', reason: 'Crunchy Veggie Alternative', category: 'Snacks & Sweets', icon: '🥕' },
+    { name: 'Roasted Makhana / Fox Nuts (100g)', reason: 'Low Calorie Superfood Crunch', category: 'Snacks & Namkeen', icon: '🍿' },
+    { name: 'Nutraj Roasted Salted Almonds', reason: 'Nutritious High Protein Snack', category: 'Snacks & Namkeen', icon: '🌰' },
+    { name: 'Haldiram\'s Roasted Chana', reason: 'Crispy High Fiber Protein Snack', category: 'Snacks & Namkeen', icon: '🫘' },
   ],
 };
 
-/**
- * Find substitutes for a given item name.
- */
 export function findSubstitutes(itemName) {
   if (!itemName) return [];
   const normalized = itemName.toLowerCase().trim();
   
-  // Direct match
   if (SUBSTITUTE_MAP[normalized]) {
     return SUBSTITUTE_MAP[normalized];
   }
   
-  // Partial / sub-word match
   for (const [key, subs] of Object.entries(SUBSTITUTE_MAP)) {
     if (normalized.includes(key) || key.includes(normalized)) {
       return subs;

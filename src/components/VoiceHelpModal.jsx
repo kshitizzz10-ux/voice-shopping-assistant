@@ -1,6 +1,6 @@
 import React from 'react';
-import { SAMPLE_VOICE_COMMANDS, SUPPORTED_LANGUAGES } from '../utils/constants';
-import { HelpCircle, X, Mic, Volume2, Globe, Sparkles } from 'lucide-react';
+import { SAMPLE_VOICE_COMMANDS } from '../utils/constants.js';
+import { HelpCircle, X, Mic, Globe } from 'lucide-react';
 
 export function VoiceHelpModal({ isOpen, onClose, onTryCommand }) {
   if (!isOpen) return null;
@@ -12,9 +12,9 @@ export function VoiceHelpModal({ isOpen, onClose, onTryCommand }) {
   }, {});
 
   const multilingualExamples = [
-    { lang: 'English (US / IN)', example: '"Add 2 bottles of whole milk", "Find organic apples under $5"' },
-    { lang: 'हिन्दी (Hindi)', example: '"दो किलो सेब जोड़ो", "दूध हटाओ", "पूरी लिस्ट खाली करो"' },
-    { lang: 'Español (Spanish)', example: '"Añadir 3 plátanos", "Buscar pasta", "Eliminar leche"' },
+    { lang: 'English (India / US)', example: '"Add 2 packets of Amul milk", "Find toothpaste under 60 rupees", "I need 1 kg apples"' },
+    { lang: 'हिन्दी (Hindi)', example: '"दो पैकेट अमूल दूध जोड़ो", "दूध हटाओ", "पूरी लिस्ट खाली करो", "100 रुपये से कम टूथपेस्ट खोजो"' },
+    { lang: 'Español (Spanish)', example: '"Añadir 2 litros de leche", "Buscar pasta", "Eliminar pan"' },
     { lang: 'Français (French)', example: '"Ajouter du lait", "Chercher café", "Supprimer le pain"' },
     { lang: 'Deutsch (German)', example: '"Milch hinzufügen", "Äpfel löschen", "Finde Tomaten"' },
   ];
@@ -45,7 +45,6 @@ export function VoiceHelpModal({ isOpen, onClose, onTryCommand }) {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
-          {/* Command Categories */}
           {Object.entries(grouped).map(([category, commands]) => (
             <div key={category} className="space-y-2">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">

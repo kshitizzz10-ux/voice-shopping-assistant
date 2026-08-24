@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { useShopping } from '../context/ShoppingContext';
-import { searchProducts } from '../utils/productDatabase';
-import { CATEGORIES } from '../utils/constants';
-import { PriceFilter } from './PriceFilter';
-import { Search, X, Mic, Plus, Check, Sparkles, Tag } from 'lucide-react';
+import { useShopping } from '../context/ShoppingContext.jsx';
+import { searchProducts } from '../utils/productDatabase.js';
+import { CATEGORIES, CURRENCY } from '../utils/constants.js';
+import { PriceFilter } from './PriceFilter.jsx';
+import { Search, X, Mic, Plus, Check, Sparkles } from 'lucide-react';
 
 export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
-  const { searchState, setSearchState, addItem, items } = useShopping();
+  const { searchState, setSearchState, addItem, items, currency = CURRENCY } = useShopping();
   const [activeCategory, setActiveCategory] = useState('All');
 
   const categoriesList = ['All', ...Object.values(CATEGORIES)];
@@ -15,7 +15,7 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
     return searchProducts({
       query: searchState.query || '',
       minPrice: searchState.minPrice ?? 0,
-      maxPrice: searchState.maxPrice ?? 50,
+      maxPrice: searchState.maxPrice ?? 1000,
       category: activeCategory,
       organicOnly: searchState.organicOnly ?? false,
     });
@@ -55,7 +55,7 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
               type="text"
               value={searchState.query || ''}
               onChange={(e) => setSearchState({ query: e.target.value })}
-              placeholder='Search items, brands (e.g. "organic apples", "Colgate")...'
+              placeholder='Search Indian groceries, brands (e.g. "Amul", "Aashirvaad", "Dettol")...'
               className="w-full pl-11 pr-24 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
               autoFocus
             />
@@ -100,10 +100,11 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
           {/* Price & Dietary Filter */}
           <PriceFilter
             minPrice={searchState.minPrice ?? 0}
-            maxPrice={searchState.maxPrice ?? 50}
+            maxPrice={searchState.maxPrice ?? 500}
             onPriceChange={(min, max) => setSearchState({ minPrice: min, maxPrice: max })}
             organicOnly={searchState.organicOnly ?? false}
             onOrganicChange={(val) => setSearchState({ organicOnly: val })}
+            currency={currency}
           />
         </div>
 
@@ -111,7 +112,7 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2.5 bg-slate-50/50">
           <div className="flex items-center justify-between text-xs text-slate-500 font-medium pb-1">
             <span>Showing {results.length} catalog items</span>
-            {searchState.maxPrice < 50 && <span>Max Price: ${searchState.maxPrice}</span>}
+            {searchState.maxPrice < 1000 && <span>Max Price: {currency}{searchState.maxPrice}</span>}
           </div>
 
           {results.length === 0 ? (
@@ -133,7 +134,7 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
                         <h4 className="font-semibold text-slate-900 text-sm truncate">{product.name}</h4>
                         {product.organic && (
                           <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.2 rounded-full">
-                            Organic
+                            Desi / Organic
                           </span>
                         )}
                       </div>
@@ -147,7 +148,7 @@ export function SearchModal({ isOpen, onClose, onVoiceSearchClick }) {
 
                   <div className="flex items-center gap-3 shrink-0">
                     <span className="font-bold text-slate-900 text-sm">
-                      ${product.price.toFixed(2)}
+                      {currency}{product.price.toFixed(0)}
                     </span>
 
                     <button

@@ -1,12 +1,14 @@
 import React from 'react';
-import { DollarSign, SlidersHorizontal } from 'lucide-react';
+import { CURRENCY } from '../utils/constants.js';
+import { SlidersHorizontal } from 'lucide-react';
 
-export function PriceFilter({ minPrice, maxPrice, onPriceChange, organicOnly, onOrganicChange }) {
+export function PriceFilter({ minPrice, maxPrice, onPriceChange, organicOnly, onOrganicChange, currency = CURRENCY }) {
   const presets = [
-    { label: 'All Prices', min: 0, max: 50 },
-    { label: 'Under $5', min: 0, max: 5 },
-    { label: '$5 - $10', min: 5, max: 10 },
-    { label: '$10 - $20', min: 10, max: 20 },
+    { label: 'All Prices', min: 0, max: 500 },
+    { label: `Under ${currency}50`, min: 0, max: 50 },
+    { label: `${currency}50 - ${currency}150`, min: 50, max: 150 },
+    { label: `${currency}150 - ${currency}300`, min: 150, max: 300 },
+    { label: `${currency}300+`, min: 300, max: 1000 },
   ];
 
   return (
@@ -14,11 +16,11 @@ export function PriceFilter({ minPrice, maxPrice, onPriceChange, organicOnly, on
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600">
           <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Price & Dietary Filters</span>
+          <span>Price & Desi / Organic Filters</span>
         </div>
 
         <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-          ${minPrice.toFixed(0)} - ${maxPrice.toFixed(0)}
+          {currency}{minPrice.toFixed(0)} - {currency}{maxPrice.toFixed(0)}
         </span>
       </div>
 
@@ -46,23 +48,23 @@ export function PriceFilter({ minPrice, maxPrice, onPriceChange, organicOnly, on
       {/* Range Slider */}
       <div className="pt-1">
         <div className="flex items-center gap-3">
-          <span className="text-xs text-slate-400 font-medium">$0</span>
+          <span className="text-xs text-slate-400 font-medium">{currency}0</span>
           <input
             type="range"
-            min="1"
-            max="30"
-            step="1"
-            value={maxPrice}
+            min="10"
+            max="600"
+            step="10"
+            value={maxPrice > 600 ? 600 : maxPrice}
             onChange={(e) => onPriceChange(minPrice, parseFloat(e.target.value))}
             className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
           />
-          <span className="text-xs text-slate-400 font-medium">$30+</span>
+          <span className="text-xs text-slate-400 font-medium">{currency}600+</span>
         </div>
       </div>
 
-      {/* Organic / Dietary Filter */}
+      {/* Organic / Desi Filter */}
       <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between">
-        <span className="text-xs font-medium text-slate-700">🌱 Organic Products Only</span>
+        <span className="text-xs font-medium text-slate-700">🌱 Organic / Desi Certified Only</span>
         <label className="relative inline-flex items-center cursor-pointer">
           <input
             type="checkbox"

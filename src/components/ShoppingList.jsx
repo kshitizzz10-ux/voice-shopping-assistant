@@ -1,15 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import { useShopping } from '../context/ShoppingContext';
-import { CategoryGroup } from './CategoryGroup';
-import { COMMON_UNITS } from '../utils/constants';
+import { useShopping } from '../context/ShoppingContext.jsx';
+import { CategoryGroup } from './CategoryGroup.jsx';
+import { COMMON_UNITS, CURRENCY } from '../utils/constants.js';
 import { Plus, Trash2, CheckCheck, Sparkles, Filter, ShoppingBag } from 'lucide-react';
 
 export function ShoppingList({ onSelectSubstitute, onOpenSearch, onOpenHelp }) {
-  const { items, addItem, clearList, clearChecked } = useShopping();
+  const { items, addItem, clearList, clearChecked, currency = CURRENCY } = useShopping();
   const [quickName, setQuickName] = useState('');
   const [quickQty, setQuickQty] = useState(1);
-  const [quickUnit, setQuickUnit] = useState('items');
-  const [filterType, setFilterType] = useState('all'); // all, active, completed
+  const [quickUnit, setQuickUnit] = useState('packets');
+  const [filterType, setFilterType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleQuickAdd = (e) => {
@@ -24,13 +24,10 @@ export function ShoppingList({ onSelectSubstitute, onOpenSearch, onOpenHelp }) {
     setQuickQty(1);
   };
 
-  // Filtered items
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
-      // Status filter
       if (filterType === 'active' && item.checked) return false;
       if (filterType === 'completed' && !item.checked) return false;
-      // Search term filter
       if (searchTerm) {
         const query = searchTerm.toLowerCase();
         const matchesName = item.name.toLowerCase().includes(query);
@@ -41,7 +38,6 @@ export function ShoppingList({ onSelectSubstitute, onOpenSearch, onOpenHelp }) {
     });
   }, [items, filterType, searchTerm]);
 
-  // Group by category
   const groupedByCategory = useMemo(() => {
     const groups = {};
     filteredItems.forEach((item) => {
@@ -73,7 +69,7 @@ export function ShoppingList({ onSelectSubstitute, onOpenSearch, onOpenHelp }) {
               type="text"
               value={quickName}
               onChange={(e) => setQuickName(e.target.value)}
-              placeholder='Type item name or use voice button below...'
+              placeholder='Type item name (e.g., Amul milk, Atta) or tap mic below...'
               className="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
             />
           </div>
@@ -94,7 +90,7 @@ export function ShoppingList({ onSelectSubstitute, onOpenSearch, onOpenHelp }) {
               onChange={(e) => setQuickUnit(e.target.value)}
               className="py-3 px-3 bg-slate-50 border border-slate-200 rounded-2xl text-slate-700 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
             >
-              {COMMON_UNITS.slice(0, 8).map((u) => (
+              {COMMON_UNITS.slice(0, 9).map((u) => (
                 <option key={u} value={u}>
                   {u}
                 </option>
@@ -114,7 +110,6 @@ export function ShoppingList({ onSelectSubstitute, onOpenSearch, onOpenHelp }) {
 
         {/* Filter & Summary Controls */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs">
-          {/* Status Tabs */}
           <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
             {['all', 'active', 'completed'].map((type) => (
               <button
@@ -132,7 +127,6 @@ export function ShoppingList({ onSelectSubstitute, onOpenSearch, onOpenHelp }) {
             ))}
           </div>
 
-          {/* Action buttons */}
           <div className="flex items-center gap-2">
             {completedCount > 0 && (
               <button
@@ -172,7 +166,7 @@ export function ShoppingList({ onSelectSubstitute, onOpenSearch, onOpenHelp }) {
           <div className="max-w-md mx-auto space-y-1">
             <h3 className="text-lg font-bold text-slate-900">Your shopping list is empty</h3>
             <p className="text-sm text-slate-500">
-              Tap the green microphone button below to say <span className="font-semibold text-emerald-700">"Add 2 bottles of milk"</span> or select items from smart suggestions!
+              Tap the green microphone button below to say <span className="font-semibold text-emerald-700">"Add 2 packets of Amul milk"</span> or select items from smart suggestions!
             </p>
           </div>
           <div className="flex items-center justify-center gap-3 pt-2">
@@ -214,7 +208,7 @@ export function ShoppingList({ onSelectSubstitute, onOpenSearch, onOpenHelp }) {
             <div className="p-4 bg-emerald-50/80 rounded-2xl border border-emerald-200/80 flex items-center justify-between text-sm font-semibold text-emerald-950">
               <span>Estimated Cart Total:</span>
               <span className="text-base font-extrabold text-emerald-700">
-                ${totalEstimatedCost.toFixed(2)}
+                {currency}{totalEstimatedCost.toFixed(0)}
               </span>
             </div>
           )}

@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useReducer, useEffect, useMemo, useCallback } from 'react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
-import { classifyItemCategory } from '../utils/categoryClassifier';
-import { generateSmartSuggestions } from '../utils/suggestionEngine';
-import { STORAGE_KEYS, CATEGORIES } from '../utils/constants';
+import { useLocalStorage } from '../hooks/useLocalStorage.js';
+import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis.js';
+import { classifyItemCategory } from '../utils/categoryClassifier.js';
+import { generateSmartSuggestions } from '../utils/suggestionEngine.js';
+import { STORAGE_KEYS, CATEGORIES, CURRENCY } from '../utils/constants.js';
 import confetti from 'canvas-confetti';
 
 const ShoppingContext = createContext(null);
@@ -12,27 +12,29 @@ const initialSearchState = {
   isOpen: false,
   query: '',
   minPrice: 0,
-  maxPrice: 50,
+  maxPrice: 300,
   category: 'All',
   organicOnly: false,
 };
 
 const DEFAULT_SAMPLE_ITEMS = [
-  { id: '1', name: 'Whole Milk', quantity: 2, unit: 'bottles', category: CATEGORIES.DAIRY_EGGS, checked: false, price: 4.89, addedAt: Date.now() - 3600000 },
-  { id: '2', name: 'Organic Honeycrisp Apples', quantity: 3, unit: 'lbs', category: CATEGORIES.PRODUCE, checked: false, price: 4.99, addedAt: Date.now() - 7200000 },
-  { id: '3', name: 'Whole Wheat Sandwich Bread', quantity: 1, unit: 'loaves', category: CATEGORIES.BAKERY, checked: true, price: 3.49, addedAt: Date.now() - 10800000 },
+  { id: '1', name: 'Amul Taaza Toned Milk', quantity: 2, unit: 'packets', category: CATEGORIES.DAIRY_EGGS, checked: false, price: 56, addedAt: Date.now() - 3600000 },
+  { id: '2', name: 'Fresh Shimla Apples', quantity: 1, unit: 'kg', category: CATEGORIES.PRODUCE, checked: false, price: 140, addedAt: Date.now() - 7200000 },
+  { id: '3', name: 'Harvest Gold 100% Atta Bread', quantity: 1, unit: 'loaves', category: CATEGORIES.BAKERY, checked: true, price: 50, addedAt: Date.now() - 10800000 },
+  { id: '4', name: 'Tata Salt Vacuum Evaporated', quantity: 1, unit: 'packets', category: CATEGORIES.PANTRY, checked: false, price: 28, addedAt: Date.now() - 14400000 },
 ];
 
 export function ShoppingProvider({ children }) {
   const [storedItems, setStoredItems] = useLocalStorage(STORAGE_KEYS.SHOPPING_LIST, DEFAULT_SAMPLE_ITEMS);
   const [purchaseHistory, setPurchaseHistory] = useLocalStorage(STORAGE_KEYS.PURCHASE_HISTORY, {
-    'Whole Milk': { count: 6, lastAdded: Date.now() - 86400000 * 4, category: CATEGORIES.DAIRY_EGGS },
-    'Organic Bananas': { count: 5, lastAdded: Date.now() - 86400000 * 6, category: CATEGORIES.PRODUCE },
-    'Large Grade A Eggs': { count: 4, lastAdded: Date.now() - 86400000 * 5, category: CATEGORIES.DAIRY_EGGS },
-    'Artisan Sourdough Loaf': { count: 3, lastAdded: Date.now() - 86400000 * 7, category: CATEGORIES.BAKERY },
+    'Amul Taaza Toned Milk': { count: 8, lastAdded: Date.now() - 86400000 * 2, category: CATEGORIES.DAIRY_EGGS },
+    'Robusta Bananas': { count: 6, lastAdded: Date.now() - 86400000 * 4, category: CATEGORIES.PRODUCE },
+    'Tata Tea Gold Leaf Chai': { count: 4, lastAdded: Date.now() - 86400000 * 6, category: CATEGORIES.BEVERAGES },
+    'Harvest Gold 100% Atta Bread': { count: 5, lastAdded: Date.now() - 86400000 * 3, category: CATEGORIES.BAKERY },
+    'Amul Fresh Malai Paneer': { count: 3, lastAdded: Date.now() - 86400000 * 5, category: CATEGORIES.DAIRY_EGGS },
   });
 
-  const [language, setLanguage] = useLocalStorage('voicecart_lang', 'en-US');
+  const [language, setLanguage] = useLocalStorage('voicecart_lang_v2', 'en-IN');
   const [searchState, setSearchState] = useReducer(
     (state, action) => ({ ...state, ...action }),
     initialSearchState
@@ -59,7 +61,6 @@ export function ShoppingProvider({ children }) {
     }, 4000);
   }, []);
 
-  // Update purchase history helper
   const recordPurchase = useCallback((name, category) => {
     setPurchaseHistory((prev) => {
       const existing = prev[name] || { count: 0, lastAdded: 0, category };
@@ -74,7 +75,6 @@ export function ShoppingProvider({ children }) {
     });
   }, [setPurchaseHistory]);
 
-  // Add Item
   const addItem = useCallback(({ name, quantity = 1, unit = 'items', brand = '', price = null, category = null }) => {
     if (!name || !name.trim()) return;
     const cleanName = name.trim();
@@ -83,7 +83,6 @@ export function ShoppingProvider({ children }) {
     setStoredItems((prev) => {
       const existingIndex = prev.findIndex((i) => i.name.toLowerCase() === cleanName.toLowerCase());
       if (existingIndex > -1) {
-        // Increase quantity of existing item
         const updated = [...prev];
         updated[existingIndex] = {
           ...updated[existingIndex],
@@ -111,7 +110,6 @@ export function ShoppingProvider({ children }) {
     addToast(`Added "${cleanName}" (${quantity} ${unit})`, 'success');
   }, [addToast, recordPurchase, setStoredItems]);
 
-  // Remove Item by ID
   const removeItem = useCallback((id) => {
     let removedName = '';
     setStoredItems((prev) => {
@@ -124,7 +122,6 @@ export function ShoppingProvider({ children }) {
     }
   }, [addToast, setStoredItems]);
 
-  // Remove Item by Name (for voice commands)
   const removeItemByName = useCallback((name) => {
     if (!name) return false;
     const clean = name.toLowerCase().trim();
@@ -144,14 +141,12 @@ export function ShoppingProvider({ children }) {
     return found;
   }, [addToast, setStoredItems]);
 
-  // Update Item
   const updateItem = useCallback((id, changes) => {
     setStoredItems((prev) =>
       prev.map((i) => (i.id === id ? { ...i, ...changes } : i))
     );
   }, [setStoredItems]);
 
-  // Update Item Quantity by ID
   const updateItemQuantity = useCallback((id, newQty) => {
     if (newQty <= 0) {
       removeItem(id);
@@ -162,7 +157,6 @@ export function ShoppingProvider({ children }) {
     );
   }, [removeItem, setStoredItems]);
 
-  // Update Item Quantity by Name (for voice commands)
   const updateItemQuantityByName = useCallback((name, newQty) => {
     if (!name) return false;
     const clean = name.toLowerCase().trim();
@@ -188,7 +182,6 @@ export function ShoppingProvider({ children }) {
     return found;
   }, [addToast, setStoredItems]);
 
-  // Toggle Item Checked
   const toggleItemChecked = useCallback((id) => {
     setStoredItems((prev) =>
       prev.map((i) => {
@@ -213,25 +206,22 @@ export function ShoppingProvider({ children }) {
     );
   }, [setStoredItems]);
 
-  // Clear Entire List
   const clearList = useCallback(() => {
     setStoredItems([]);
     addToast('Cleared shopping list', 'info');
   }, [addToast, setStoredItems]);
 
-  // Clear Checked Items
   const clearChecked = useCallback(() => {
     setStoredItems((prev) => prev.filter((i) => !i.checked));
     addToast('Cleared all checked items', 'info');
   }, [addToast, setStoredItems]);
 
-  // Search Triggers
   const triggerSearch = useCallback((params) => {
     setSearchState({
       isOpen: true,
       query: params.query || '',
       minPrice: params.minPrice !== undefined ? params.minPrice : 0,
-      maxPrice: params.maxPrice !== undefined ? params.maxPrice : 50,
+      maxPrice: params.maxPrice !== undefined ? params.maxPrice : 300,
       organicOnly: Boolean(params.organic),
     });
   }, []);
@@ -240,7 +230,6 @@ export function ShoppingProvider({ children }) {
     setSearchState({ isOpen: false });
   }, []);
 
-  // Suggestions Calculation
   const suggestions = useMemo(() => {
     return generateSmartSuggestions({
       currentItems: storedItems,
@@ -272,6 +261,7 @@ export function ShoppingProvider({ children }) {
     stopSpeaking,
     voiceFeedbackEnabled,
     toggleVoiceFeedback,
+    currency: CURRENCY,
   };
 
   return <ShoppingContext.Provider value={value}>{children}</ShoppingContext.Provider>;
